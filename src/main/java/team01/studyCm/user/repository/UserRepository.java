@@ -7,6 +7,6 @@ import team01.studyCm.user.entity.User;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository  extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdAndPassword(String id, String password);
 }
