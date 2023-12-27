@@ -9,6 +9,7 @@ import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -60,14 +61,15 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         User newUser = User.builder()
-                .user_id(userDto.getUser_id())
                 .id(userDto.getId())
                 .user_name(userDto.getUser_name())
                 .email(userDto.getEmail())
                 .job(userDto.getJob())
-                .created_at(userDto.getCreated_at())
-                .modified_at(userDto.getModified_at())
+                .created_at(currentTime)
+                .modified_at(currentTime)
                 .phone(userDto.getPhone())
                 .password(userDto.getPassword())
                 .build();
