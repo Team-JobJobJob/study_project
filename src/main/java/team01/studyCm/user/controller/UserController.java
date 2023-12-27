@@ -12,11 +12,12 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/users/")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/api/users/signin")
+    @GetMapping("/signin")
     public String signIn(@RequestBody LoginCredDto signinDto) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
@@ -28,7 +29,7 @@ public class UserController {
         return "ChatList";
     }
 
-    @PostMapping("/api/users/signup")
+    @PostMapping("/signup")
     public String signup(@RequestBody UserDto userDto) {
 
         boolean userInfo = userService.signUp(userDto);
@@ -40,7 +41,7 @@ public class UserController {
         return "ChatList";
     }
 
-    @DeleteMapping("/api/users/withdraw/{userId}")
+    @DeleteMapping("/withdraw")
     public String withdraw(@RequestBody LoginCredDto deleteDto) {
 
         boolean deleteOutcome = userService.deleteUser(deleteDto);
@@ -52,7 +53,7 @@ public class UserController {
         return "ChatList";
     }
 
-    @PutMapping("/api/user/modify/{userId}")
+    @PutMapping("/modify/{userId}")
     public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
 
         boolean modifyOutcome = userService.modify(userId, InfoDto);
