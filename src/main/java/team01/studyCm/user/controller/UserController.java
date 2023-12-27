@@ -1,0 +1,66 @@
+package team01.studyCm.user.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import team01.studyCm.user.dto.LoginCredDto;
+import team01.studyCm.user.dto.UserDto;
+import team01.studyCm.user.dto.UserInfoDto;
+import team01.studyCm.user.service.UserService;
+
+import java.util.Optional;
+
+@Controller
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @GetMapping("/api/users/signin")
+    public String signIn(@RequestBody LoginCredDto signinDto) {
+
+        Optional<UserDto> userInfo = userService.signIn(signinDto);
+
+        if(userInfo.isEmpty()) {
+            return "SignInFailed";
+        }
+
+        return "ChatList";
+    }
+
+    @PostMapping("/api/users/signup")
+    public String signup(@RequestBody UserDto userDto) {
+
+        boolean userInfo = userService.signUp(userDto);
+
+        if(!userInfo) {
+            return "SignUpFailed";
+        }
+
+        return "ChatList";
+    }
+
+    @DeleteMapping("/api/users/withdraw/{userId}")
+    public String withdraw(@RequestBody LoginCredDto deleteDto) {
+
+        boolean deleteOutcome = userService.deleteUser(deleteDto);
+
+        if(!deleteOutcome) {
+            return "DeleteFailed";
+        }
+
+        return "ChatList";
+    }
+
+    @PutMapping("/api/user/modify/{userId}")
+    public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
+
+        boolean modifyOutcome = userService.modify(userId, InfoDto);
+
+        if(!modifyOutcome) {
+            return "ModifyFailed";
+        }
+
+        return "ChatList";
+    }
+}
