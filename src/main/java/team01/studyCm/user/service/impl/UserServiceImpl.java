@@ -40,6 +40,8 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+
+
     @Override
     public boolean deleteUser(LoginCredDto deleteDto) {
         String id = deleteDto.getId();
@@ -65,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
         User newUser = User.builder()
                 .id(userDto.getId())
-                .user_name(userDto.getUser_name())
+                .userName(userDto.getUserName())
                 .email(userDto.getEmail())
                 .job(userDto.getJob())
                 .created_at(currentTime)
@@ -96,7 +98,7 @@ public class UserServiceImpl implements UserService {
         return Optional.ofNullable(UserDto.builder()
                 .user_id(user.getUser_id())
                 .id(user.getId())
-                .user_name(user.getUser_name())
+                .userName(user.getUsername())
                 .email(user.getEmail())
                 .job(user.getJob())
                 .created_at(user.getCreated_at())
