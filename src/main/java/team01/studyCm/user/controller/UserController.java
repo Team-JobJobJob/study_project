@@ -1,21 +1,29 @@
 package team01.studyCm.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
+import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
 import java.util.Optional;
+import team01.studyCm.user.service.impl.UserServiceImpl;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final UserService userService;
+
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/signin")
     public String signIn(@RequestBody LoginCredDto signinDto) {
@@ -64,4 +72,5 @@ public class UserController {
 
         return "ChatList";
     }
+
 }

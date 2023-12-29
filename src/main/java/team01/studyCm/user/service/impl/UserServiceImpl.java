@@ -9,6 +9,7 @@ import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(LoginCredDto deleteDto) {
         String id = deleteDto.getId();
         String password = deleteDto.getPassword();
-        Optional<User> optionalUser = userRepository.findByEmailAndPassword(id, password);
+        Optional<User> optionalUser = userRepository.findByIdAndPassword(id, password);
 
         if(optionalUser.isEmpty()){
             return false;
@@ -60,14 +61,18 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         User newUser = User.builder()
-            .user_id(userDto.getUser_id())
-            .userName(userDto.getUser_name())
-            .email(userDto.getEmail())
-            .job(userDto.getJob())
-            .phone(userDto.getPhone())
-            .password(userDto.getPassword())
-            .build();
+                .id(userDto.getId())
+                .user_name(userDto.getUser_name())
+                .email(userDto.getEmail())
+                .job(userDto.getJob())
+                .created_at(currentTime)
+                .modified_at(currentTime)
+                .phone(userDto.getPhone())
+                .password(userDto.getPassword())
+                .build();
 
         userRepository.save(newUser);
 
@@ -78,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> signIn(LoginCredDto signinDto) {
         String id = signinDto.getId();
         String password = signinDto.getPassword();
-        Optional<User> optionalUser = userRepository.findByEmailAndPassword(id, password);
+        Optional<User> optionalUser = userRepository.findByIdAndPassword(id, password);
 
         if(optionalUser.isEmpty()){
             return Optional.empty();
@@ -89,12 +94,15 @@ public class UserServiceImpl implements UserService {
 
     public Optional<UserDto> convertToUserDto(User user) {
         return Optional.ofNullable(UserDto.builder()
-            .user_id(user.getUser_id())
-            .user_name(user.getUsername())
-            .email(user.getEmail())
-            .job(user.getJob())
-            .phone(user.getPhone())
-            .password(user.getPassword())
-            .build());
+                .user_id(user.getUser_id())
+                .id(user.getId())
+                .user_name(user.getUser_name())
+                .email(user.getEmail())
+                .job(user.getJob())
+                .created_at(user.getCreated_at())
+                .modified_at(user.getModified_at())
+                .phone(user.getPhone())
+                .password(user.getPassword())
+                .build());
     }
 }

@@ -13,7 +13,7 @@ public class UserDto {
     private Long user_id;
     private String id;
     private String password;
-    private String user_name;
+    private String userName;
     private String job;
     private String phone;
     private LocalDateTime created_at;
