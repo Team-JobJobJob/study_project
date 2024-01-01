@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @Data
 public class LoginCredDto {
 
-    private String id;
+    private String email;
     private String password;
 }

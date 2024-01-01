@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserDto {
     private Long user_id;
-    private String id;
     private String password;
     private String userName;
     private String job;

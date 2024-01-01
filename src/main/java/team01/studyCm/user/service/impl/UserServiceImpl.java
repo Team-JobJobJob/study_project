@@ -44,9 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUser(LoginCredDto deleteDto) {
-        String id = deleteDto.getId();
+        String email = deleteDto.getEmail();
         String password = deleteDto.getPassword();
-        Optional<User> optionalUser = userRepository.findByIdAndPassword(id, password);
+        Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
 
         if(optionalUser.isEmpty()){
             return false;
@@ -58,15 +58,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean signUp(UserDto userDto) {
-        Optional<User> optionalUser = userRepository.findById(userDto.getUser_id());
-        if(optionalUser.isPresent()){
-            return false;
-        }
+//        Optional<User> optionalUser = userRepository.findById(userDto.getUser_id());
+//        if(optionalUser.isPresent()){
+//            return false;
+//        }
 
         LocalDateTime currentTime = LocalDateTime.now();
 
         User newUser = User.builder()
-                .id(userDto.getId())
                 .userName(userDto.getUserName())
                 .email(userDto.getEmail())
                 .job(userDto.getJob())
@@ -83,9 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> signIn(LoginCredDto signinDto) {
-        String id = signinDto.getId();
+        String email = signinDto.getEmail();
         String password = signinDto.getPassword();
-        Optional<User> optionalUser = userRepository.findByIdAndPassword(id, password);
+        Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
 
         if(optionalUser.isEmpty()){
             return Optional.empty();
@@ -97,7 +96,6 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> convertToUserDto(User user) {
         return Optional.ofNullable(UserDto.builder()
                 .user_id(user.getUser_id())
-                .id(user.getId())
                 .userName(user.getUsername())
                 .email(user.getEmail())
                 .job(user.getJob())

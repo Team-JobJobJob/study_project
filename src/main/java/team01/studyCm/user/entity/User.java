@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
-    private String id;
+    private String email;
     private String password;
 
     @Column(name = "user_name")
@@ -36,7 +36,6 @@ public class User implements UserDetails {
     private String phone;
     private LocalDateTime created_at;
     private LocalDateTime modified_at;
-    private String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
