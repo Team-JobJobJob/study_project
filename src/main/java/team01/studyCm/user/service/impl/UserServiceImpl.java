@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> signIn(LoginCredDto signinDto) {
-        String email = signinDto.getEmail();
+        String id = signinDto.getId();
         String password = signinDto.getPassword();
         Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
 
