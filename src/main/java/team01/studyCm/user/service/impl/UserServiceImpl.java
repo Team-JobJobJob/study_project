@@ -6,6 +6,7 @@ import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
 import team01.studyCm.user.entity.User;
+import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
@@ -21,7 +22,6 @@ public class UserServiceImpl implements UserService {
     public boolean modify(Long userId, UserInfoDto userInfoDto) {
         String phone = userInfoDto.getPhone();
         String job = userInfoDto.getJob();
-        String email = userInfoDto.getEmail();
         String password = userInfoDto.getPassword();
         Optional<User> optionalUser = userRepository.findById(userId);
 
@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
         User user = optionalUser.get();
         user.setPhone(phone);
         user.setJob(job);
-        user.setEmail(email);
         user.setPassword(password);
 
         userRepository.save(user);
@@ -56,10 +55,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean signUp(UserDto userDto) {
-//        Optional<User> optionalUser = userRepository.findById(userDto.getUser_id());
-//        if(optionalUser.isPresent()){
-//            return false;
-//        }
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        if(optionalUser.isPresent()){
+            return false;
+        }
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -71,6 +70,7 @@ public class UserServiceImpl implements UserService {
                 .modified_at(currentTime)
                 .phone(userDto.getPhone())
                 .password(userDto.getPassword())
+                .role(Role.ROLE_USER)
                 .build();
 
         userRepository.save(newUser);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> signIn(LoginCredDto signinDto) {
-        String id = signinDto.getId();
+        String email = signinDto.getEmail();
         String password = signinDto.getPassword();
         Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
 
@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
                 .modified_at(user.getModified_at())
                 .phone(user.getPhone())
                 .password(user.getPassword())
+                .role(user.getRole())
                 .build());
     }
 }

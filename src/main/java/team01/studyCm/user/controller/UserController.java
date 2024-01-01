@@ -32,7 +32,7 @@ public class UserController {
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            return "SignInFailed";
+            return "users/signin";
         }
 
         return "ChatList";
@@ -55,7 +55,7 @@ public class UserController {
 
         model.addAttribute("result", userInfo);
 
-        return "signupComplete.html";
+        return "ChatList";
     }
 
     @DeleteMapping("/withdraw")
