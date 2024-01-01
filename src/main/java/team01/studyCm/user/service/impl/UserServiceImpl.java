@@ -40,8 +40,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-
-
     @Override
     public boolean deleteUser(LoginCredDto deleteDto) {
         String email = deleteDto.getEmail();
