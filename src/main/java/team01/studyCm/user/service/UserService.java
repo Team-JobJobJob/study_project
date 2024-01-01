@@ -7,8 +7,15 @@ import team01.studyCm.user.dto.UserInfoDto;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<UserDto> signIn(LoginCredDto signinDto);
-    boolean signUp(UserDto userDto);
-    boolean deleteUser(LoginCredDto deleteDto);
-    boolean modify(Long userId, UserInfoDto userInfoDto);
+
+  Optional<UserDto> signIn(LoginCredDto signinDto);
+
+  boolean signUp(UserDto userDto);
+
+  boolean deleteUser(LoginCredDto deleteDto);
+
+  boolean modify(Long userId, UserInfoDto userInfoDto);
+
+
+
 }

@@ -76,7 +76,8 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        //사용자의 아이디(email)반환
+        return email;
     }
 
     @Override
