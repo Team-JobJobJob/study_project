@@ -3,6 +3,7 @@ package team01.studyCm.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
@@ -18,33 +19,41 @@ import team01.studyCm.user.service.impl.UserServiceImpl;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
-
     private final UserService userService;
 
-    private final UserServiceImpl userServiceImpl;
-
     @GetMapping("/signin")
+    public String signIn() {
+        return "users/signin";
+    }
+
+    @PostMapping("/signin")
     public String signIn(@RequestBody LoginCredDto signinDto) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            return "SignInFailed";
+            return "users/signin";
         }
 
         return "ChatList";
     }
 
+    @GetMapping("/signup")
+    public String signUp() {
+        return "users/signUp";
+    }
+
     @PostMapping("/signup")
-    public String signup(@RequestBody UserDto userDto) {
+    public String signUpSubmit(Model model, UserDto userDto) {
+        System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 
         if(!userInfo) {
             return "SignUpFailed";
         }
+
+        model.addAttribute("result", userInfo);
 
         return "ChatList";
     }
