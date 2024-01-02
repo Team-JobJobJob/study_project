@@ -28,6 +28,7 @@ public class ChatRoom {
   private String roomName;
   private String description;
   private Integer number;
+  private String job;
 
   @CreatedDate
   private LocalDateTime created_at;

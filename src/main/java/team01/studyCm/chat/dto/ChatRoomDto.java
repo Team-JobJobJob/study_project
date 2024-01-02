@@ -19,6 +19,7 @@ public class ChatRoomDto {
   private String roomName;
   private String description;
   private Integer number;
+  private String job;
   private LocalDateTime created_at;
   private LocalDateTime modified_at;
 }

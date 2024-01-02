@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import team01.studyCm.chat.dto.ChatRoomDto;
+import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.chat.service.impl.ChatServiceImpl;
 
 @RequestMapping("/chat")
@@ -15,20 +16,19 @@ import team01.studyCm.chat.service.impl.ChatServiceImpl;
 @Controller
 public class ChatRoomController {
 
-  private final ChatServiceImpl chatServiceimpl;
+  private final ChatService chatService;
 
 
   @GetMapping("/createRoom")
   public String createRoom() {
-    return "chat/createRoom";
+    return "chatRooms/createRoom";
   }
 
   // 채팅방 생성
-  @ResponseBody
-  @PostMapping("/room/creatRoom")
+  @PostMapping("/createRoom")
   public String createRoomSubmit(Model model, ChatRoomDto chatRoomDto) {
 
-    boolean result = chatServiceimpl.createRoom(chatRoomDto);
+    boolean result = chatService.createRoom(chatRoomDto);
 
     if(!result) {
       return "CreateRoomFailed";
