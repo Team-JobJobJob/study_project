@@ -26,19 +26,21 @@ public class ChatRoom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long roomId;
-  @Column
+  @Column(length = 30)
   private String roomName;
   @Column
   private String description;
   @Column
   private Integer number;
-  @Column
+  @Column(length = 30)
   private String job;
 
   @CreatedDate
+  @Column
   private LocalDateTime created_at;
 
   @LastModifiedDate
+  @Column
   private LocalDateTime modified_at;
 
   public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
