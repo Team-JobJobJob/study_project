@@ -3,6 +3,8 @@ package team01.studyCm.auth.controller;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import team01.studyCm.auth.service.OAuth2Service;
@@ -18,7 +20,13 @@ public class OAuth2Controller {
   public String updateUserInfo(@RequestBody String job,Principal principal){
     oAuth2UserService.updateOAuth2UserInfo(job,principal);
 
-    return "success";
+    return "index";
+  }
+
+  @GetMapping("/oauth2/signup")
+  public String showUpdateUserInfo(Model model, Principal principal){
+    model.addAttribute(principal);
+    return "OAuth2Update";
   }
 
 

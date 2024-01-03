@@ -28,11 +28,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     log.info("OAuth2 로그인 성공");
     try{
       CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+      String email = oAuth2User.getEmail();
 
       //처음 로그인하는 경우 GUEST로 role 설정, 추가 정보 입력받도록 redirect
-      if(oAuth2User.getRole() == Role.GUEST){
+      if(oAuth2User.getRole().equals(Role.GUEST)){
         String accessToken = tokenProvider.createAccessToken(oAuth2User.getEmail());
-        response.addHeader("Authorization","Bearer"+accessToken);
+        response.addHeader("Authorization","Bearer "+accessToken);
         response.sendRedirect("/oauth2/signup");
       }else{
         loginSuccess(response, oAuth2User);

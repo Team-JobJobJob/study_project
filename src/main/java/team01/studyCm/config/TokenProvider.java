@@ -31,6 +31,7 @@ public class TokenProvider {
 
   private static final String KEY_ROLES = "role";
   private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1h
+  private static final String BEARER = "Bearer ";
   private final UserDetailService userDetailService;
   private final UserRepository userRepository;
 
@@ -47,13 +48,11 @@ public class TokenProvider {
     Date now = new Date();
     Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
-    return Jwts.builder()
-        .setSubject("AccessToken")
-        .setIssuedAt(now)
-        .setExpiration(expiredDate)
-        .signWith(SignatureAlgorithm.HS512, this.secretKey)
-        .claim("email",email)
-        .compact();
+    return JWT.create()
+        .withSubject("AccessToken")
+        .withExpiresAt(expiredDate)
+        .withClaim("email", email)
+        .sign(Algorithm.HMAC512(secretKey));
 
   }
 
@@ -92,12 +91,10 @@ public class TokenProvider {
     Date now = new Date();
     Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
-    return Jwts.builder()
-        .setSubject("RefreshToken")
-        .setIssuedAt(now)
-        .setExpiration(expiredDate)
-        .signWith(SignatureAlgorithm.HS512, this.secretKey)
-        .compact();
+    return JWT.create()
+        .withSubject("RefreshToken")
+        .withExpiresAt(expiredDate)
+        .sign(Algorithm.HMAC512(secretKey));
   }
 
   public void updateRefreshToken(String email, String refreshToken) {
@@ -114,7 +111,8 @@ public class TokenProvider {
   public void sendAccessToken(HttpServletResponse response, String accessToken) {
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(accessHeader, accessToken);
-    response.setHeader(accessHeader, accessToken);
+
+    log.info("재발급 AccessToken {}",accessToken);
   }
 
   public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken,
@@ -128,15 +126,15 @@ public class TokenProvider {
   // 헤더에서 RefreshToken추출 ->  헤더 가져온 후 Bearer삭제
   public Optional<String> extractRefreshToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(refreshHeader))
-        .filter(refreshToken -> refreshToken.startsWith("Bearer"))
-        .map(refreshToken -> refreshToken.replace("Bearer", ""));
+        .filter(refreshToken -> refreshToken.startsWith(BEARER))
+        .map(refreshToken -> refreshToken.replace(BEARER, ""));
   }
 
   //헤더에서 AccessToken추출
   public Optional<String> extractAccessToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(accessHeader))
-        .filter(accessToken -> accessToken.startsWith("Bearer"))
-        .map(accessToken -> accessToken.replace("Bearer",""));
+        .filter(accessToken -> accessToken.startsWith(BEARER))
+        .map(accessToken -> accessToken.replace(BEARER,""));
   }
 
   public boolean isTokenValid(String token) {
