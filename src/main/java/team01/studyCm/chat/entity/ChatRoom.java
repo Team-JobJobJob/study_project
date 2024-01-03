@@ -36,5 +36,15 @@ public class ChatRoom {
   @LastModifiedDate
   private LocalDateTime modified_at;
 
+  public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
+    ChatRoom chatRoom = new ChatRoom();
+    chatRoom.setRoomName(chatRoom.getRoomName());
+    chatRoom.setDescription(chatRoomDto.getDescription());
+    chatRoom.setNumber(chatRoomDto.getNumber());
+    chatRoom.setJob(chatRoomDto.getJob());
+
+    return chatRoom;
+  }
+
 
 }

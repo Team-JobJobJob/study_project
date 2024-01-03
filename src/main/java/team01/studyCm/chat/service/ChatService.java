@@ -9,6 +9,6 @@ import team01.studyCm.chat.entity.ChatRoom;
 
 public interface ChatService {
 
-  boolean createRoom(ChatRoomDto chatRoomDto);
+  void createRoom(ChatRoomDto chatRoomDto);
 
 }

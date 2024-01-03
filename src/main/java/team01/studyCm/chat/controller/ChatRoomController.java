@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,15 +27,11 @@ public class ChatRoomController {
 
   // 채팅방 생성
   @PostMapping("/createRoom")
-  public String createRoomSubmit(Model model, ChatRoomDto chatRoomDto) {
+  public String createRoomSubmit(@ModelAttribute ChatRoomDto chatRoomDto) {
 
-    boolean result = chatService.createRoom(chatRoomDto);
+    System.out.println("chatRoomDto = " + chatRoomDto);
 
-    if(!result) {
-      return "CreateRoomFailed";
-    }
-
-    model.addAttribute("result", result);
+    chatService.createRoom(chatRoomDto);
 
     return "chatList";
   }
