@@ -17,5 +17,5 @@ public interface UserService {
   boolean modify(Long userId, UserInfoDto userInfoDto);
 
 
-
+  UserDto findById(Long userId);
 }

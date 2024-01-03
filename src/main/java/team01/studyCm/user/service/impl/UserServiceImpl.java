@@ -18,6 +18,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+
     @Override
     public boolean modify(Long userId, UserInfoDto userInfoDto) {
         String phone = userInfoDto.getPhone();
@@ -37,6 +38,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return true;
+    }
+
+    @Override
+    public UserDto findById(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            return UserDto.toUserDto(optionalUser.get());
+        } else {
+            return null;
+        }
     }
 
     @Override

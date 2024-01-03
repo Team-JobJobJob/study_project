@@ -58,6 +58,11 @@ public class UserController {
         return "ChatList";
     }
 
+    @GetMapping("/withdraw")
+    public String withdraw() {
+        return "users/withdraw";
+    }
+
     @DeleteMapping("/withdraw")
     public String withdraw(@RequestBody LoginCredDto deleteDto) {
 
@@ -70,6 +75,11 @@ public class UserController {
         return "ChatList";
     }
 
+    @GetMapping("/modify/{userId}")
+    public String modify() {
+        return "users/modify";
+    }
+
     @PutMapping("/modify/{userId}")
     public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
 
@@ -80,6 +90,13 @@ public class UserController {
         }
 
         return "ChatList";
+    }
+
+    @GetMapping("/mypage/{id}")
+    public String findById(@PathVariable Long userId, Model model) {
+        UserDto userDto = userService.findById(userId);
+        model.addAttribute("user", userDto);
+        return "users/myPage";
     }
 
 }
