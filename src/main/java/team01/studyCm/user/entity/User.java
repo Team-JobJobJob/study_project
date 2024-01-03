@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Map;
 import lombok.*;
 //import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.entity.status.SocialType;
 
@@ -63,7 +65,6 @@ public class User implements UserDetails {
     public void passwordEncode(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -71,13 +72,13 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
         //사용자의 아이디(email)반환
-        return email;
+        return this.email;
     }
 
     @Override
@@ -109,6 +110,5 @@ public class User implements UserDetails {
     public void updateRefreshToken(String updateRefreshToken){
         this.refreshToken = updateRefreshToken;
     }
-
 
 }

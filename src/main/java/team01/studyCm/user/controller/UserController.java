@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping("/signin")
     public String signIn() {
-        return "users/signin";
+        return "signin";
     }
 
     @PostMapping("/signin")

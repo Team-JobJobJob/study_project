@@ -11,6 +11,7 @@ public abstract class OAuth2UserInfo {
   }
 
   //유저 정보들을 가져오는 메소드
+  public abstract String getEmail();
   public abstract String getId(); //소셜 식별 값 : 구글 - "sub", 카카오 - "id", 네이버 - "id"
   public abstract String getName();
 
