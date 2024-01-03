@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean modify(Long userId, UserInfoDto userInfoDto) {
         String phone = userInfoDto.getPhone();
+        String userName = userInfoDto.getUserName();
         String job = userInfoDto.getJob();
         String password = userInfoDto.getPassword();
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
         user.setPhone(phone);
+        user.setUserName(userName);
         user.setJob(job);
         user.setPassword(password);
 

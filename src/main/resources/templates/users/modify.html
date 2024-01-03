@@ -35,6 +35,11 @@
         box-sizing: border-box;
     }
 
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
     button {
         background-color: #4caf50;
         color: #fff;
@@ -52,32 +57,44 @@
 </head>
 <body>
 
-  <form action="/users/modify" method="post">
+  <form th:action="@{'/users/modify/' + ${userId}}" th:method="post">
     <h2>회원 정보 수정</h2>
     <div>
-      <label for = "email">회원 아이디</label>
-      <input type="email" id="email" name="email" th:value="${user.email}" readonly>
-    </div>
-    <div>
       <label for = "userName">회원 이름</label>
-      <input type="text" id="userName" name="userName" th:value="${user.userName}">
+      <input type="text" id="userName" name="userName">
     </div>
     <div>
       <label for = "password">회원 비밀번호</label>
-      <input type="text" id="password" name="password" th:value="${user.password}">
+      <input type="text" id="password" name="password">
     </div>
     <div>
       <label for = "confirmPassword">회원 비밀번호 확인</label>
-      <input type="text" id="confirmPassword" th:value="${user.password}">
+      <input type="text" id="confirmPassword">
     </div>
     <div>
       <label for = "phone">전화 번호</label>
-      <input type="text" id="phone" name="phone" th:value="${user.phone}">
+      <input type="text" id="phone" name="phone">
     </div>
     <div>
       <label for = "job">희망 직무</label>
-      <input type="text" id="job" name="job" th:value="${user.job}">
+      <select id="job" name="job">
+        <option value="IT/인터넷 전체">IT/인터넷 전체</option>
+        <option value="웹개발">웹개발</option>
+        <option value="응용프로그램개발">응용프로그램개발</option>
+        <option value="ERP/시스템개발/설계">ERP/시스템개발/설계</option>
+        <option value="네트워크/서버/보안">네트워크/서버/보안</option>
+        <option value="DBA/데이터베이스">DBA/데이터베이스</option>
+        <option value="콘텐츠/사이트운영">콘텐츠/사이트운영</option>
+        <option value="웹기획/PM/웹마케팅">웹기획/PM/웹마케팅</option>
+        <option value="HTML/퍼블리싱/UI개발">HTML/퍼블리싱/UI개발</option>
+        <option value="QA/테스트/검증">QA/테스트/검증</option>
+        <option value="게임">게임</option>
+        <option value="동영상제작/편집">동영상제작/편집</option>
+        <option value="빅데이터/AI">빅데이터/AI</option>
+      </select>
     </div>
+
+    <h1></h1>
 
         <button>
           <a href="/users/mypage">취소</a>

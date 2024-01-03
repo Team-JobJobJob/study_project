@@ -63,33 +63,36 @@ public class UserController {
         return "users/withdraw";
     }
 
-    @DeleteMapping("/withdraw")
-    public String withdraw(@RequestBody LoginCredDto deleteDto) {
+    @PostMapping("/withdraw")
+    public String withdraw(LoginCredDto deleteDto) {
 
         boolean deleteOutcome = userService.deleteUser(deleteDto);
 
         if(!deleteOutcome) {
-            return "DeleteFailed";
+            return "users/withdraw";
         }
 
-        return "ChatList";
+        //나중에 chat 목록으로 바꾸기
+        return "users/mypage";
     }
 
     @GetMapping("/modify/{userId}")
-    public String modify() {
+    public String modify(Model model, @PathVariable Long userId) {
+
+        model.addAttribute("userId", userId);
         return "users/modify";
     }
 
-    @PutMapping("/modify/{userId}")
-    public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
+    @PostMapping("/modify/{userId}")
+    public String modify(@PathVariable Long userId, UserInfoDto InfoDto) {
 
         boolean modifyOutcome = userService.modify(userId, InfoDto);
 
         if(!modifyOutcome) {
-            return "ModifyFailed";
+            return "users/modify";
         }
 
-        return "ChatList";
+        return "users/mypage";
     }
 
     @GetMapping("/mypage/{id}")
