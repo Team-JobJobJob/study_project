@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import team01.studyCm.auth.service.OAuth2Service;
 
 @Controller
@@ -17,7 +18,7 @@ public class OAuth2Controller {
 
   //추가 정보 입력
   @PostMapping("/oauth2/signup")
-  public String updateUserInfo(@RequestBody String job,Principal principal){
+  public String updateUserInfo(@RequestParam String job,Principal principal){
     oAuth2UserService.updateOAuth2UserInfo(job,principal);
 
     return "index";

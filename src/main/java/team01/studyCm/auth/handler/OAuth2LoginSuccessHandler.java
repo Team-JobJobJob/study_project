@@ -37,6 +37,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.sendRedirect("/oauth2/signup");
       }else{
         loginSuccess(response, oAuth2User);
+        response.sendRedirect("");
       }
     }catch (Exception e){
       throw e;

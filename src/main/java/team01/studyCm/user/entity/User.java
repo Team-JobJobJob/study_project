@@ -65,6 +65,7 @@ public class User implements UserDetails {
     public void passwordEncode(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

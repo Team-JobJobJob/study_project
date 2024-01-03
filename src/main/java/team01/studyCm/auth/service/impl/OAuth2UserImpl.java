@@ -44,12 +44,13 @@ public class OAuth2UserImpl implements OAuth2Service {
   }
 
   private String getEmailByToken(OAuth2AuthenticationToken authenticationToken) {
-    String email = authenticationToken.getPrincipal().getAttribute("email");
+    String email = authenticationToken.getPrincipal().getAttribute("email");  //구글
 
     if(email == null){
       Map<String, Object> attributes = authenticationToken.getPrincipal().getAttribute("response");
       if(attributes != null){
         email = (String) attributes.get("email");
+        //네이버
       }
     }
 
