@@ -26,14 +26,12 @@ public class ChatRoom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long roomId;
-  @Column(length = 30)
+  @Column(length = 30, name = "room_name")
   private String roomName;
   @Column
   private String description;
   @Column
   private Integer number;
-  @Column(length = 30)
-  private String job;
 
   @CreatedDate
   @Column
@@ -45,11 +43,12 @@ public class ChatRoom {
 
   public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
     return ChatRoom.builder()
-        .roomName(chatRoomDto.getRoomName())
-        .description(chatRoomDto.getDescription())
-        .number(chatRoomDto.getNumber())
-        .job(chatRoomDto.getJob())
-        .build();
+                  .roomName(chatRoomDto.getRoomName())
+                  .description(chatRoomDto.getDescription())
+                  .number(chatRoomDto.getNumber())
+                  .created_at(LocalDateTime.now())
+                  .modified_at(LocalDateTime.now())
+                  .build();
   }
 
 }

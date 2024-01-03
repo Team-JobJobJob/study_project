@@ -2,6 +2,7 @@ package team01.studyCm.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,17 @@ public class ChatRoomController {
     return "chatRooms/createRoom";
   }
 
+  @GetMapping
+  public String chatPage(Authentication authentication, Model model) {
+    if (authentication != null && authentication.isAuthenticated()) {
+      String username = authentication.getName();
+      // 여기에서 username을 사용하여 로그인한 사용자의 정보를 활용할 수 있음
+      model.addAttribute("username", username);
+      return "chatRooms/createRoom";
+    } else {
+      return "redirect:/login";
+    }
+  }
   // 채팅방 생성
   @PostMapping("/createRoom")
   public String createRoom(@ModelAttribute ChatRoomDto chatRoomDto) {
