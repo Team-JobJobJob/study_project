@@ -1,5 +1,6 @@
 package team01.studyCm.chat.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +26,13 @@ public class ChatRoom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long roomId;
+  @Column
   private String roomName;
+  @Column
   private String description;
+  @Column
   private Integer number;
+  @Column
   private String job;
 
   @CreatedDate
@@ -37,14 +42,12 @@ public class ChatRoom {
   private LocalDateTime modified_at;
 
   public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
-    ChatRoom chatRoom = new ChatRoom();
-    chatRoom.setRoomName(chatRoom.getRoomName());
-    chatRoom.setDescription(chatRoomDto.getDescription());
-    chatRoom.setNumber(chatRoomDto.getNumber());
-    chatRoom.setJob(chatRoomDto.getJob());
-
-    return chatRoom;
+    return ChatRoom.builder()
+        .roomName(chatRoomDto.getRoomName())
+        .description(chatRoomDto.getDescription())
+        .number(chatRoomDto.getNumber())
+        .job(chatRoomDto.getJob())
+        .build();
   }
-
 
 }

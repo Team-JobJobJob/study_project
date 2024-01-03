@@ -27,13 +27,13 @@ public class ChatRoomController {
 
   // 채팅방 생성
   @PostMapping("/createRoom")
-  public String createRoomSubmit(@ModelAttribute ChatRoomDto chatRoomDto) {
+  public String createRoom(@ModelAttribute ChatRoomDto chatRoomDto) {
 
     System.out.println("chatRoomDto = " + chatRoomDto);
 
     chatService.createRoom(chatRoomDto);
 
-    return "chatList";
+    return "index";
   }
 
 }
