@@ -1,10 +1,7 @@
 package team01.studyCm.chat.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import team01.studyCm.chat.dto.ChatRoomDto;
+import team01.studyCm.chat.dto.ChatDto;
+import team01.studyCm.user.entity.User;
 
 @Getter
 @Setter
@@ -21,17 +19,26 @@ import team01.studyCm.chat.dto.ChatRoomDto;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ChatRoom {
+public class Chat {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long roomId;
+  private Long chatId;
+  @ManyToOne
+  @JoinColumn(name = "user")
+  private User user;
   @Column(length = 30, name = "room_name")
   private String roomName;
   @Column
   private String description;
   @Column
   private Integer number;
+
+  @Column
+  private String email;
+
+  @Column
+  private String job;
 
   @CreatedDate
   @Column
@@ -41,11 +48,12 @@ public class ChatRoom {
   @Column
   private LocalDateTime modified_at;
 
-  public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
-    return ChatRoom.builder()
-                  .roomName(chatRoomDto.getRoomName())
-                  .description(chatRoomDto.getDescription())
-                  .number(chatRoomDto.getNumber())
+  public static Chat toSaveEntity(ChatDto chatDto) {
+    return Chat.builder()
+                  .roomName(chatDto.getRoomName())
+                  .user(chatDto.getUser())
+                  .description(chatDto.getDescription())
+                  .number(chatDto.getNumber())
                   .created_at(LocalDateTime.now())
                   .modified_at(LocalDateTime.now())
                   .build();

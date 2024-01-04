@@ -1,14 +1,18 @@
 package team01.studyCm.chat.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import team01.studyCm.chat.dto.ChatRoomDto;
-import team01.studyCm.chat.entity.ChatRoom;
+
+import team01.studyCm.chat.dto.ChatDto;
+import team01.studyCm.user.entity.User;
+
+import java.security.Principal;
+import java.util.List;
 
 
 public interface ChatService {
 
-  void createRoom(ChatRoomDto chatRoomDto);
+  void createRoom(ChatDto chatDto, User user, Principal principal);
 
+  void modifyRoom(ChatDto chatDto);
+  void deleteRoom(Long chatId);
+  List<ChatDto> allChatsByUser(User user);
 }
