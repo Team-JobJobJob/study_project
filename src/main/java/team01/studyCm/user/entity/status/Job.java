@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Jobs {
+public enum Job {
     IT("IT/인터넷 전체"),
     WEBDEV("웹개발"),
     APPDEV("응용프로그램개발"),

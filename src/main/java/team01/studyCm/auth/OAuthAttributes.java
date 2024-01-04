@@ -5,6 +5,7 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import team01.studyCm.auth.userInfo.GoogleOAuth2UserInfo;
+import team01.studyCm.auth.userInfo.KakaoOAuth2UserInfo;
 import team01.studyCm.auth.userInfo.NaverOAuth2UserInfo;
 import team01.studyCm.auth.userInfo.OAuth2UserInfo;
 import team01.studyCm.user.entity.User;
@@ -33,6 +34,8 @@ public class OAuthAttributes {
       Map<String, Object> attributes){
     if(socialType == SocialType.NAVER){
       return ofNaver(userNameAttributeName, attributes);
+    }else if(socialType == SocialType.KAKAO){
+      return ofKakao(userNameAttributeName, attributes);
     }
     return ofGoogle(userNameAttributeName, attributes);
   }
@@ -50,6 +53,13 @@ public class OAuthAttributes {
     return OAuthAttributes.builder()
         .nameAttributeKey(userNameAttributeName)
         .oAuth2UserInfo(new NaverOAuth2UserInfo(attributes))
+        .build();
+  }
+
+  private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
+    return OAuthAttributes.builder()
+        .nameAttributeKey(userNameAttributeName)
+        .oAuth2UserInfo(new KakaoOAuth2UserInfo(attributes))
         .build();
   }
 

@@ -1,6 +1,5 @@
 package team01.studyCm.auth.service;//package team01.studyCm.auth.service;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import team01.studyCm.auth.CustomOAuth2User;
@@ -24,6 +22,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
   private final UserRepository userRepository;
 
   private static final String NAVER = "naver";
+  private static final String KAKAO = "kakao";
 
 
   @Override
@@ -31,8 +30,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     /**
      * DefaultOAuth2UserService 객체를 생성하여, loadUser(userRequest)를 통해 DefaultOAuth2User 객체를 생성 후 반환
      * DefaultOAuth2UserService의 loadUser()는 소셜 로그인 API의 사용자 정보 제공 URI로 요청을 보내서
-     * 사용자 정보를 얻은 후, 이를 통해 DefaultOAuth2User 객체를 생성 후 반환한다.
-     * 결과적으로, OAuth2User는 OAuth 서비스에서 가져온 유저 정보를 담고 있는 유저
+     * 사용자 정보를 얻은 후, 이를 통해 DefaultOAuth2User 객체를 생성 후 반환
+     * OAuth2User는 OAuth 서비스에서 가져온 유저 정보를 담고 있는 유저
      */
     OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
     OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
@@ -64,13 +63,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     );
   }
 
-  private SocialType getSocialType(String registrationId) {
+  public static SocialType getSocialType(String registrationId) {
     if(NAVER.equals(registrationId)) {
       return SocialType.NAVER;
     }
-//    if(KAKAO.equals(registrationId)) {
-//      return SocialType.KAKAO;
-//    }
+    if(KAKAO.equals(registrationId)) {
+      return SocialType.KAKAO;
+    }
     return SocialType.GOOGLE;
   }
 

@@ -50,6 +50,6 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
       return null;
     }
 
-    return (String) response.get("phone");
+    return (String) response.get("mobile");
   }
 }
