@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import team01.studyCm.chat.dto.ChatRoomDto;
+import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.user.entity.User;
 
 @Getter
@@ -19,12 +19,13 @@ import team01.studyCm.user.entity.User;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ChatRoom {
+public class Chat {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long roomId;
+  private Long chatId;
   @ManyToOne
+  @JoinColumn(name = "user")
   private User user;
   @Column(length = 30, name = "room_name")
   private String roomName;
@@ -32,6 +33,12 @@ public class ChatRoom {
   private String description;
   @Column
   private Integer number;
+
+  @Column
+  private String email;
+
+  @Column
+  private String job;
 
   @CreatedDate
   @Column
@@ -41,12 +48,12 @@ public class ChatRoom {
   @Column
   private LocalDateTime modified_at;
 
-  public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
-    return ChatRoom.builder()
-                  .roomName(chatRoomDto.getRoomName())
-                  .user(chatRoomDto.getUser())
-                  .description(chatRoomDto.getDescription())
-                  .number(chatRoomDto.getNumber())
+  public static Chat toSaveEntity(ChatDto chatDto) {
+    return Chat.builder()
+                  .roomName(chatDto.getRoomName())
+                  .user(chatDto.getUser())
+                  .description(chatDto.getDescription())
+                  .number(chatDto.getNumber())
                   .created_at(LocalDateTime.now())
                   .modified_at(LocalDateTime.now())
                   .build();
