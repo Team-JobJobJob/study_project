@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import team01.studyCm.chat.dto.ChatRoomDto;
 import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.chat.service.impl.ChatServiceImpl;
+import team01.studyCm.user.entity.User;
+
+import java.util.List;
 
 @RequestMapping("/chat")
 @RequiredArgsConstructor
@@ -47,6 +46,41 @@ public class ChatRoomController {
     chatService.createRoom(chatRoomDto);
 
     return "chatRooms/createRoomComplete";
+  }
+
+  // 채팅방 수정
+  @PostMapping("/modifyRoom/{chatId}")
+  public String modifyRoom(@ModelAttribute ChatRoomDto chatRoomDto) {
+
+    System.out.println("chatRoomDto = " + chatRoomDto);
+
+    chatService.modifyRoom(chatRoomDto);
+
+    //추후에 수정
+    return "chatRooms/myChatList";
+  }
+
+  // 채팅방 삭제
+  @PostMapping("/deleteRoom/{chatId}")
+  public String deleteRoom(@ModelAttribute ChatRoomDto chatRoomDto) {
+
+    System.out.println("chatRoomDto = " + chatRoomDto);
+
+    chatService.deleteRoom(chatRoomDto.getRoomId());
+
+
+    //추후에 수정
+    return "chatRooms/myChatList";
+  }
+
+  @GetMapping("/myChatList/{userId}")
+  public String myChatRooms(Model model, User user) {
+    List<ChatRoomDto> chatRooms = chatService.allChatsByUser(user);
+
+    model.addAttribute("chatRooms", chatRooms);
+
+    //추후에 수정
+    return "chatRooms/myChatList";
   }
 
 }
