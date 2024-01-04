@@ -27,11 +27,11 @@ public class ChatServiceImpl implements ChatService {
     this.chatRepository = chatRoomRepository;
   }
 
-//  public void createRoom(ChatRoomDto chatRoomDto) {
+//  public void createRoom(ChatDto chatDto) {
 //
-//    ChatRoom chatRoom = ChatRoom.toSaveEntity(chatRoomDto);
+//    Chat chat = Chat.toSaveEntity(chatDto);
 //
-//    chatRoomRepository.save(chatRoom);
+//    chatRepository.save(chat);
 //
 //  }
 
@@ -54,9 +54,9 @@ public class ChatServiceImpl implements ChatService {
 
     // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
     Chat chat = Chat.builder()
-            .roomName(chatDto.getRoomName())
+            .chatName(chatDto.getChatName())
             .description(chatDto.getDescription())
-            .number(chatDto.getNumber())
+            .memberCnt(chatDto.getMemberCnt())
             .created_at(chatDto.getCreated_at())
             .modified_at(chatDto.getModified_at())
             .email((String) otherDtoFields.get("email"))
@@ -110,9 +110,9 @@ public class ChatServiceImpl implements ChatService {
             .created_at(chat.getCreated_at())
             .description(chat.getDescription())
             .modified_at(chat.getModified_at())
-            .number(chat.getNumber())
+            .memberCnt(chat.getMemberCnt())
             .user(chat.getUser())
-            .roomName(chat.getRoomName())
+            .chatName(chat.getChatName())
             .build();
   }
 }

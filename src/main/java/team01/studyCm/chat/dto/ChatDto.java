@@ -22,9 +22,9 @@ public class ChatDto {
 
   private Long chatId;
   private User user;
-  private String roomName;
+  private String chatName;
   private String description;
-  private Integer number;
+  private Integer memberCnt;
   private LocalDateTime created_at;
   private LocalDateTime modified_at;
   private String email;

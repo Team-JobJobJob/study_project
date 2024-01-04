@@ -27,12 +27,12 @@ public class Chat {
   @ManyToOne
   @JoinColumn(name = "user")
   private User user;
-  @Column(length = 30, name = "room_name")
-  private String roomName;
+  @Column(length = 30, name = "chat_name")
+  private String chatName;
   @Column
   private String description;
-  @Column
-  private Integer number;
+  @Column (name = "member_cnt")
+  private Integer memberCnt;
 
   @Column
   private String email;
@@ -50,10 +50,10 @@ public class Chat {
 
   public static Chat toSaveEntity(ChatDto chatDto) {
     return Chat.builder()
-                  .roomName(chatDto.getRoomName())
+                  .chatName(chatDto.getChatName())
                   .user(chatDto.getUser())
                   .description(chatDto.getDescription())
-                  .number(chatDto.getNumber())
+                  .memberCnt(chatDto.getMemberCnt())
                   .created_at(LocalDateTime.now())
                   .modified_at(LocalDateTime.now())
                   .build();
