@@ -11,6 +11,7 @@ import team01.studyCm.user.dto.UserInfoDto;
 import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
+import java.security.Principal;
 import java.util.Optional;
 import team01.studyCm.user.service.impl.UserServiceImpl;
 
@@ -23,19 +24,21 @@ public class UserController {
 
     @GetMapping("/signin")
     public String signIn() {
-        return "signin";
+        return "index";
     }
 
     @PostMapping("/signin")
-    public String signIn(@RequestBody LoginCredDto signinDto) {
+    public String signIn(LoginCredDto signinDto, Principal principal) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            return "users/signin";
+            return "chatRooms/createRoom";
         }
 
-        return "ChatList";
+        System.out.println(principal);
+
+        return "chatRooms/createRoom";
     }
 
     @GetMapping("/signup")

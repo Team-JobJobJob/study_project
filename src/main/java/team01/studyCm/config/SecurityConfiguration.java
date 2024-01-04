@@ -3,6 +3,7 @@ package team01.studyCm.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -38,14 +39,12 @@ public class SecurityConfiguration {
             userInfoEndpointConfig.userService(customOAuth2UserService))
         )
         .formLogin(form -> form
-            .loginPage("/login")
-            .defaultSuccessUrl("/", true)
+            .loginPage("/index")
+            .defaultSuccessUrl("/chat/createRoom", true)
             .permitAll()
         )
         .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
-
-
 }

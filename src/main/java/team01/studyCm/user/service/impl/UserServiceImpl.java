@@ -1,6 +1,9 @@
 package team01.studyCm.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
@@ -15,9 +18,15 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("해당 고객 없음"));
+    }
 
     @Override
     public boolean modify(Long userId, UserInfoDto userInfoDto) {
@@ -100,6 +109,8 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isEmpty()){
             return Optional.empty();
         }
+
+        log.info("로그인 성공: {}",email);
 
         return convertToUserDto(optionalUser.get());
     }
