@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import team01.studyCm.user.entity.User;
 
 @ToString
 @Getter
@@ -17,6 +18,7 @@ import lombok.ToString;
 public class ChatRoomDto {
 
   private Long roomId;
+  private User user;
   private String roomName;
   private String description;
   private Integer number;

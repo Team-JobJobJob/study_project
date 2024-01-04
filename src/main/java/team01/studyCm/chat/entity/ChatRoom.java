@@ -1,10 +1,7 @@
 package team01.studyCm.chat.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +11,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import team01.studyCm.chat.dto.ChatRoomDto;
+import team01.studyCm.user.entity.User;
 
 @Getter
 @Setter
@@ -26,6 +24,8 @@ public class ChatRoom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long roomId;
+  @ManyToOne
+  private User user;
   @Column(length = 30, name = "room_name")
   private String roomName;
   @Column
@@ -44,6 +44,7 @@ public class ChatRoom {
   public static ChatRoom toSaveEntity(ChatRoomDto chatRoomDto) {
     return ChatRoom.builder()
                   .roomName(chatRoomDto.getRoomName())
+                  .user(chatRoomDto.getUser())
                   .description(chatRoomDto.getDescription())
                   .number(chatRoomDto.getNumber())
                   .created_at(LocalDateTime.now())
