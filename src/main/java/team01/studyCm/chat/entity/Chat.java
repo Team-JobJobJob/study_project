@@ -19,12 +19,13 @@ import team01.studyCm.user.entity.User;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "chat")
 public class Chat {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long chatId;
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user")
   private User user;
   @Column(length = 30, name = "chat_name")
@@ -57,6 +58,19 @@ public class Chat {
                   .created_at(LocalDateTime.now())
                   .modified_at(LocalDateTime.now())
                   .build();
+  }
+
+  public static Chat toSaveEntity(ChatDto chatDto, User loggedInUser) {
+    return Chat.builder()
+            .chatName(chatDto.getChatName())
+            .description(chatDto.getDescription())
+            .memberCnt(chatDto.getMemberCnt())
+            .email(loggedInUser.getEmail())
+            .job(loggedInUser.getJob())
+            .user(loggedInUser)
+            .created_at(LocalDateTime.now())
+            .modified_at(LocalDateTime.now())
+            .build();
   }
 
 }

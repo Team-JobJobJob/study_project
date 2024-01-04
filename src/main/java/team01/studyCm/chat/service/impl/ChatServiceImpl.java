@@ -27,54 +27,86 @@ public class ChatServiceImpl implements ChatService {
     this.chatRepository = chatRoomRepository;
   }
 
-//  public void createRoom(ChatDto chatDto) {
+  public void createRoom(ChatDto chatDto, User loggedInUser) {
+
+    loggedInUser = // 로그인한 사용자 정보를 가져오거나 생성
+            userRepository.save(loggedInUser);
+
+    Chat chat = Chat.toSaveEntity(chatDto, loggedInUser);
+
+    chatRepository.save(chat);
+
+  }
+
+//  public void createRoom(ChatDto chatDto, User user, Principal principal) {
+//    if (principal == null) {
+//      // Principal이 null이면 사용자가 인증되지 않은 상태임을 처리
+//      throw new UnauthorizedAccessException("User not authenticated");
+//    }
 //
-//    Chat chat = Chat.toSaveEntity(chatDto);
+//    String email = principal.getName();
 //
+//    // 사용자가 존재하지 않으면 예외를 던짐
+//    user = userRepository.findByEmail(user.getEmail())
+//            .orElseThrow(() -> new NoSuchElementException("User not found for email: " + email));
+//
+//    String job = user.getJob();
+//
+//// getOtherDtoFields를 이용하여 다른 필드들을 가져옴
+//    Map<String, Object> otherDtoFields = chatDto.getOtherDtoFields();
+//
+//    // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
+//    Chat chat = Chat.builder()
+//            .chatName(chatDto.getChatName())
+//            .description(chatDto.getDescription())
+//            .memberCnt(chatDto.getMemberCnt())
+//            .created_at(chatDto.getCreated_at())
+//            .modified_at(chatDto.getModified_at())
+//            .email((String) otherDtoFields.get("email"))
+//            .job((String) otherDtoFields.get("job"))
+//            .user(user)
+//            .build();
+//
+//    // ChatRoom 엔티티 저장
 //    chatRepository.save(chat);
-//
 //  }
 
-  public void createRoom(ChatDto chatDto, User user, Principal principal) {
-    if (principal == null) {
-      // Principal이 null이면 사용자가 인증되지 않은 상태임을 처리
-      throw new UnauthorizedAccessException("User not authenticated");
-    }
-
-    String email = principal.getName();
-
-    // 사용자가 존재하지 않으면 예외를 던짐
-    user = userRepository.findByEmail(user.getEmail())
-            .orElseThrow(() -> new NoSuchElementException("User not found for email: " + email));
-
-    String job = user.getJob();
-
-// getOtherDtoFields를 이용하여 다른 필드들을 가져옴
-    Map<String, Object> otherDtoFields = chatDto.getOtherDtoFields();
-
-    // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
-    Chat chat = Chat.builder()
-            .chatName(chatDto.getChatName())
-            .description(chatDto.getDescription())
-            .memberCnt(chatDto.getMemberCnt())
-            .created_at(chatDto.getCreated_at())
-            .modified_at(chatDto.getModified_at())
-            .email((String) otherDtoFields.get("email"))
-            .job((String) otherDtoFields.get("job"))
-            .user(user)
-            .build();
-
-    // ChatRoom 엔티티 저장
-    chatRepository.save(chat);
-  }
+//  public void createRoom(ChatDto chatDto, User user) {
+//
+//    String email = user.getEmail();
+//
+//    // 사용자가 존재하지 않으면 예외를 던짐
+//    user = userRepository.findByEmail(user.getEmail())
+//            .orElseThrow(() -> new NoSuchElementException("User not found for email: " + email));
+//
+//    String job = user.getJob();
+//
+//// getOtherDtoFields를 이용하여 다른 필드들을 가져옴
+//    Map<String, Object> otherDtoFields = chatDto.getOtherDtoFields();
+//
+//    // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
+//    Chat chat = Chat.builder()
+//            .chatName(chatDto.getChatName())
+//            .description(chatDto.getDescription())
+//            .memberCnt(chatDto.getMemberCnt())
+//            .created_at(chatDto.getCreated_at())
+//            .modified_at(chatDto.getModified_at())
+//            .email((String) otherDtoFields.get("email"))
+//            .job((String) otherDtoFields.get("job"))
+//            .user(user)
+//            .build();
+//
+//    // ChatRoom 엔티티 저장
+//    chatRepository.save(chat);
+//  }
 
 
   @Override
   public void modifyRoom(ChatDto chatDto) {
 
-    Optional<Chat> optionalChatRoom = chatRepository.findById(chatDto.getChatId());
+    Optional<Chat> optionalChat = chatRepository.findById(chatDto.getChatId());
 
-    if(optionalChatRoom.isEmpty()){
+    if(optionalChat.isEmpty()){
       return ;
     }
 

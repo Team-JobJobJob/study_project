@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface ChatService {
 
-  void createRoom(ChatDto chatDto, User user, Principal principal);
+//  void createRoom(ChatDto chatDto, User user, Principal principal);
+//  void createRoom(ChatDto chatDto, User user);
 
+  void createRoom(ChatDto chatDto,User loggedInUser);
   void modifyRoom(ChatDto chatDto);
   void deleteRoom(Long chatId);
   List<ChatDto> allChatsByUser(User user);

@@ -21,19 +21,42 @@ public class ChatController {
 
   @GetMapping("")
   public String createRoom() {
+
     return "chatRooms/createRoom";
+
+
   }
 
-  // 채팅방 생성
   @PostMapping("")
-  public String createRoom(@ModelAttribute ChatDto chatDto, User user, Principal principal) {
+  public String createRoom(@ModelAttribute ChatDto chatDto, User loggedInUser) {
 
     System.out.println("chatRoomDto = " + chatDto);
 
-    chatService.createRoom(chatDto, user, principal);
+    chatService.createRoom(chatDto, loggedInUser);
 
     return "chatRooms/createRoomComplete";
   }
+
+  // 채팅방 생성
+//  @PostMapping("")
+//  public String createRoom(@ModelAttribute ChatDto chatDto, User user, Principal principal) {
+//
+//    System.out.println("chatRoomDto = " + chatDto);
+//
+//    chatService.createRoom(chatDto, user, principal);
+//
+//    return "chatRooms/createRoomComplete";
+//  }
+
+//  @PostMapping("/{userId}")
+//  public String createRoom(@ModelAttribute ChatDto chatDto, User user) {
+//
+//    System.out.println("chatRoomDto = " + chatDto);
+//
+//    chatService.createRoom(chatDto, user);
+//
+//    return "chatRooms/createRoomComplete";
+//  }
 
   // 채팅방 수정
   @PostMapping("/modifyRoom/{chatId}")

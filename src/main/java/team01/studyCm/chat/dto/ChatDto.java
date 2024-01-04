@@ -30,11 +30,10 @@ public class ChatDto {
   private String email;
   private String job;
 
-  public Map<String, Object> getOtherDtoFields() {
-    Map<String, Object> otherDtoFields = new HashMap<>();
-    otherDtoFields.put("email", user.getEmail());
-    otherDtoFields.put("job", user.getJob());
-    // 필요에 따라 추가
-    return otherDtoFields;
+  public ChatDto(User loggedInUser) {
+    this.email = loggedInUser.getEmail();
+    this.job = loggedInUser.getJob();
+    this.user = loggedInUser;
   }
+
 }

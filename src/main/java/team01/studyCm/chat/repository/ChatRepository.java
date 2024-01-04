@@ -11,4 +11,6 @@ import team01.studyCm.user.entity.User;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Chat> findAllByUser(User user);
 
+    Chat findByEmail(String email);
+
 }
