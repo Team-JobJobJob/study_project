@@ -7,7 +7,7 @@ import team01.studyCm.user.dto.UserInfoDto;
 
 import java.util.Optional;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
   Optional<UserDto> signIn(LoginCredDto signinDto);
 

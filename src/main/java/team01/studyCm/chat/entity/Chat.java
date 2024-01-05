@@ -25,18 +25,20 @@ public class Chat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long chatId;
+
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user")
   private User user;
+
   @Column(length = 30, name = "chat_name")
   private String chatName;
+
   @Column
   private String description;
+
   @Column (name = "member_cnt")
   private Integer memberCnt;
 
-  @Column
-  private String email;
 
   @Column
   private String job;
@@ -65,7 +67,6 @@ public class Chat {
             .chatName(chatDto.getChatName())
             .description(chatDto.getDescription())
             .memberCnt(chatDto.getMemberCnt())
-            .email(loggedInUser.getEmail())
             .job(loggedInUser.getJob())
             .user(loggedInUser)
             .created_at(LocalDateTime.now())

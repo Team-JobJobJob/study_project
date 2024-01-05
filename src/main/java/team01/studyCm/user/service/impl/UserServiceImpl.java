@@ -1,6 +1,7 @@
 package team01.studyCm.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 

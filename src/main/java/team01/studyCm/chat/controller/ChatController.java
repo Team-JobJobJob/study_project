@@ -1,10 +1,16 @@
 package team01.studyCm.chat.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team01.studyCm.chat.dto.ChatDto;
+import team01.studyCm.chat.dto.ChatPageDto;
 import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.User;
 
@@ -28,11 +34,11 @@ public class ChatController {
   }
 
   @PostMapping("")
-  public String createRoom(@ModelAttribute ChatDto chatDto, User loggedInUser) {
+  public String createRoom(@ModelAttribute ChatDto chatDto, Principal principal) {
 
     System.out.println("chatRoomDto = " + chatDto);
 
-    chatService.createRoom(chatDto, loggedInUser);
+    chatService.createRoom(chatDto, principal);
 
     return "chatRooms/createRoomComplete";
   }
@@ -91,6 +97,19 @@ public class ChatController {
 
     //추후에 수정
     return "chatRooms/myChatList";
+  }
+
+  @GetMapping("/rooms")
+  public String getChatList(Model model, @RequestParam String job,
+      @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+      @RequestParam(required = false, defaultValue = "chat_id", value = "orderby") String orderCreteria,
+      Pageable pageable, @AuthenticationPrincipal User user) {
+
+  Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job, orderCreteria);
+
+    model.addAttribute("chatPageList", chatPageList);
+
+    return "chatRooms/ChatRoomList";
   }
 
 }
