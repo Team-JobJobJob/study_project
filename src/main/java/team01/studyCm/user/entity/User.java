@@ -111,8 +111,6 @@ public class User implements UserDetails {
         return this;
     }
 
-    public void updateRefreshToken(String updateRefreshToken){
-        this.refreshToken = updateRefreshToken;
-    }
+
 
 }

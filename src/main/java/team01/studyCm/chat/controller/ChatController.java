@@ -99,10 +99,10 @@ public class ChatController {
     return "chatRooms/myChatList";
   }
 
-  @GetMapping("/rooms")
-  public String getChatList(Model model, @RequestParam String job,
+  @GetMapping("/rooms/{job}")
+  public String getChatList(Model model, @PathVariable String job,
       @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-      @RequestParam(required = false, defaultValue = "chat_id", value = "orderby") String orderCreteria,
+      @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
       Pageable pageable, @AuthenticationPrincipal User user) {
 
   Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job, orderCreteria);

@@ -99,7 +99,7 @@ public class TokenProvider {
 
   public void updateRefreshToken(String email, String refreshToken) {
     userRepository.findByEmail(email)
-        .ifPresentOrElse(user -> user.updateRefreshToken(refreshToken),
+        .ifPresentOrElse(user -> user.setRefreshToken(refreshToken),
             () -> new Exception("일치하는 회원이 없습니다"));
   }
 

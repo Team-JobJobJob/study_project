@@ -93,21 +93,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   //refresh token재발급 + db 업데이트
   private String reissueUpdateRefreshToken(User user) {
     String reissueRefreshToken = tokenProvider.createRefreshToken();
-    user.updateRefreshToken(reissueRefreshToken);
-    userRepository.saveAndFlush(user);  //즉시 db에 변경사항 반영
-
+    user.setRefreshToken(reissueRefreshToken);
+    userRepository.saveAndFlush(user);
     return reissueRefreshToken;
   }
 
-//  private String resolveTokenFromRequest(HttpServletRequest request) {
-//    String token = request.getHeader(TOKEN_HEADER);
-//
-//    if (!ObjectUtils.isEmpty(token) && token.startsWith(TOKEN_PREFIX)) {
-//      return token.substring(TOKEN_PREFIX.length());
-//    }
-//
-//    return null;
-//  }
 
   public void saveAuthentication(User user) {
     String password = user.getPassword();

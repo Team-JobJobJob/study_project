@@ -24,6 +24,7 @@ public class Chat {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "chat_id")
   private Long chatId;
 
   @ManyToOne(cascade = CascadeType.ALL)
