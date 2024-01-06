@@ -41,7 +41,7 @@ public class ChatServiceImpl implements ChatService {
 //    loggedInUser = // 로그인한 사용자 정보를 가져오거나 생성
 //            userRepository.save(loggedInUser);
 //
-//    Chat chat = Chat.toSaveEntity(chatDto, loggedInUser);
+//    Chat chat = Chat.toEntity(chatDto, loggedInUser);
 //
 //    chatRepository.save(chat);
 //
@@ -113,7 +113,7 @@ public class ChatServiceImpl implements ChatService {
       return ;
     }
 
-    Chat chat = Chat.toSaveEntity(chatDto);
+    Chat chat = Chat.toEntity(chatDto);
 
     chatRepository.save(chat);
   }

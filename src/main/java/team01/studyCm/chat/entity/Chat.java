@@ -52,7 +52,7 @@ public class Chat {
   @Column
   private LocalDateTime modified_at;
 
-  public static Chat toSaveEntity(ChatDto chatDto) {
+  public static Chat toEntity(ChatDto chatDto) {
     return Chat.builder()
                   .chatName(chatDto.getChatName())
                   .user(chatDto.getUser())
@@ -63,7 +63,7 @@ public class Chat {
                   .build();
   }
 
-  public static Chat toSaveEntity(ChatDto chatDto, User loggedInUser) {
+  public static Chat toEntity(ChatDto chatDto, User loggedInUser) {
     return Chat.builder()
             .chatName(chatDto.getChatName())
             .description(chatDto.getDescription())
