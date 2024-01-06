@@ -1,19 +1,22 @@
 package team01.studyCm.user.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
-import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
 import java.security.Principal;
 import java.util.Optional;
-import team01.studyCm.user.service.impl.UserServiceImpl;
+
+import team01.studyCm.util.CookieUtility;
+import team01.studyCm.util.EnumUtility;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public String signIn(LoginCredDto signinDto, Principal principal) {
+    public String signIn(Model model, HttpServletResponse response, LoginCredDto signinDto, Principal principal) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
@@ -36,9 +39,9 @@ public class UserController {
             return "chatRooms/createRoom";
         }
 
-        System.out.println(principal);
+        CookieUtility.setUserCookie(response, userInfo.get());
 
-        return "chatRooms/createRoom";
+        return "redirect:/chat/rooms/" + EnumUtility.jobEnumValueToName(userInfo.get().getJob());
     }
 
     @GetMapping("/signup")
