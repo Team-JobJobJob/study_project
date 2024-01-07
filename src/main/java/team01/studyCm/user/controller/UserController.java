@@ -17,7 +17,6 @@ import team01.studyCm.user.service.impl.UserServiceImpl;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -41,12 +40,12 @@ public class UserController {
         return "chatRooms/createRoom";
     }
 
-    @GetMapping("/signup")
+    @GetMapping("users/signup")
     public String signUp() {
         return "users/signUp";
     }
 
-    @PostMapping("/signup")
+    @PostMapping("users/signup")
     public String signUpSubmit(Model model, UserDto userDto) {
         System.out.println("start");
 
@@ -61,12 +60,12 @@ public class UserController {
         return "ChatList";
     }
 
-    @GetMapping("/withdraw")
+    @GetMapping("users/withdraw")
     public String withdraw() {
         return "users/withdraw";
     }
 
-    @PostMapping("/withdraw")
+    @PostMapping("users/withdraw")
     public String withdraw(LoginCredDto deleteDto) {
 
         boolean deleteOutcome = userService.deleteUser(deleteDto);
@@ -79,14 +78,14 @@ public class UserController {
         return "users/mypage";
     }
 
-    @GetMapping("/modify/{userId}")
+    @GetMapping("users/modify/{userId}")
     public String modify(Model model, @PathVariable Long userId) {
 
         model.addAttribute("userId", userId);
         return "users/modify";
     }
 
-    @PostMapping("/modify/{userId}")
+    @PostMapping("users/modify/{userId}")
     public String modify(@PathVariable Long userId, UserInfoDto InfoDto) {
 
         boolean modifyOutcome = userService.modify(userId, InfoDto);
@@ -98,7 +97,7 @@ public class UserController {
         return "users/mypage";
     }
 
-    @GetMapping("/mypage/{id}")
+    @GetMapping("users/mypage/{id}")
     public String findById(@PathVariable Long userId, Model model) {
         UserDto userDto = userService.findById(userId);
         model.addAttribute("user", userDto);
