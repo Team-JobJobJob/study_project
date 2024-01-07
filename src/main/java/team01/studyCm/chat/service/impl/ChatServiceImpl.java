@@ -126,9 +126,22 @@ public class ChatServiceImpl implements ChatService {
       return ;
     }
 
-    Chat chat = Chat.toEntity(chatDto);
+    Chat data = optionalChat.get();
+    data.setChatName(chatDto.getChatName());
+    data.setDescription(chatDto.getDescription());
+    data.setMemberCnt(chatDto.getMemberCnt());
 
-    chatRepository.save(chat);
+    chatRepository.save(data);
+  }
+
+  @Override
+  public Optional<ChatDto> chatValueById(Long chatId) {
+    Optional<Chat> optionalChat = chatRepository.findById(chatId);
+    if(optionalChat.isEmpty()){
+      return Optional.empty();
+    }
+
+    return Optional.of(convertToChatDto(optionalChat.get()));
   }
 
   @Override
@@ -143,11 +156,11 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  public List<ChatDto> allChatsByUser(User user) {
-    List<Chat> chatRooms =  chatRepository.findAllByUser(user);
+  public List<ChatDto> allChatsByUserEmail(String email) {
+    List<Chat> chatRooms =  chatRepository.findAllByUser_Email(email);
     List<ChatDto> ret = new ArrayList<>();
     for (Chat chat : chatRooms) {
-      ret.add(convertToUserDto(chat));
+      ret.add(convertToChatDto(chat));
     }
     return ret;
   }
@@ -171,7 +184,7 @@ public class ChatServiceImpl implements ChatService {
     return chatPageList;
   }
 
-  public ChatDto convertToUserDto(Chat chat) {
+  public ChatDto convertToChatDto(Chat chat) {
     return ChatDto.builder()
             .chatId(chat.getChatId())
             .created_at(chat.getCreated_at())

@@ -20,7 +20,7 @@ public class OAuth2Controller {
   public String updateUserInfo(@RequestParam String job,Principal principal){
     oAuth2UserService.updateOAuth2UserInfo(job,principal);
 
-    return "chatRooms/ChatRoomList";
+    return "redirect:/chat/rooms/" + job;
   }
 
   @GetMapping("/oauth2/signup")

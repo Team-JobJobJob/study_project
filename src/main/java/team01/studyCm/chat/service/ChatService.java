@@ -10,6 +10,7 @@ import team01.studyCm.user.entity.User;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ChatService {
@@ -20,7 +21,9 @@ public interface ChatService {
 //  void createRoom(ChatDto chatDto,User loggedInUser);
   void modifyRoom(ChatDto chatDto);
   void deleteRoom(Long chatId);
-  List<ChatDto> allChatsByUser(User user);
+  List<ChatDto> allChatsByUserEmail(String userId);
+
+  Optional<ChatDto> chatValueById(Long chatId);
 
 
   Page<ChatPageDto> getChatRoomList(Pageable pageable, int pageNo, String job, String orderCreteria);

@@ -53,16 +53,16 @@
 </head>
 <body>
 
-<form th:action="@{'/chat/modifyRoom/' + ${userId}}" th:method="post">
+<form th:action="@{'/chat/modifyRoom/' + ${chatId}}" th:method="post">
     <h2>채팅방 수정</h2>
     <label for="chatName">채팅방 이름:</label>
-    <input type="text" id="chatName" name="chatName" required>
+    <input type="text" id="chatName" name="chatName" th:value="${chatName}" required>
 
     <label for="description">채팅방 설명:</label>
-    <input type="text" id="description" name="description" required>
+    <input type="text" id="description" name="description" th:value="${description}" required>
 
     <label for="memberCnt">채팅방 최대 인원:</label>
-    <input type="number" id="memberCnt" name="memberCnt" required>
+    <input type="number" id="memberCnt" name="memberCnt" th:value="${memberCnt}" required>
 
 
     <button type="submit">채팅방 수정</button>

@@ -7,11 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import team01.studyCm.chat.entity.Chat;
-import team01.studyCm.user.entity.User;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    List<Chat> findAllByUser(User user);
+    List<Chat> findAllByUser_Email(String email);
 
     Page<Chat> findByJob(String job, Pageable pageable);
 }

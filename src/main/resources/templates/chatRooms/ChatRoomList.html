@@ -64,11 +64,57 @@
       padding: 8px;
       text-align: left;
     }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      background-color: #4CAF50; /* Bright green color */
+      color: #fff;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: flex-end; /* Align content to the right */
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav li {
+      margin-right: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffd54f; /* Light yellow color on hover */
+    }
+
   </style>
 </head>
 <body>
 
 <form th:action = "@{'/chat/rooms/' + ${job}} " th:method="get">
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/chat/myChatList">My Page</a></li>
+        <li><a href="/chat">Create Chat</a></li>
+      </ul>
+    </nav>
+  </header>
   <h2> 채팅방 목록 </h2>
   <div class="table-container">
     <table th:border="1" th:width="500" th:height="300" th:align = "center">

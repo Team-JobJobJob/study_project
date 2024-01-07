@@ -10,10 +10,15 @@ import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import team01.studyCm.user.entity.status.Job;
 import team01.studyCm.user.entity.status.Role;
 
 @Getter
 public class CustomOAuth2User extends DefaultOAuth2User {
+
+  private Long userId;
+
+  private String job;
 
   private String email;
 
@@ -29,12 +34,14 @@ public class CustomOAuth2User extends DefaultOAuth2User {
    *                         {@link #getAttributes()}
    */
   public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities,
-      Map<String, Object> attributes, String nameAttributeKey,
-      String email, Role role, String phoneNumber) {
+                          Map<String, Object> attributes, String nameAttributeKey,
+                          String email, Long userId, String job, Role role, String phoneNumber) {
     super(authorities, attributes, nameAttributeKey);
 
     //super -> 부모객체 default생성
     //email, role 추가 파라미터로 주입
+    this.userId = userId;
+    this.job = job;
     this.email = email;
     this.role = role;
     this.phoneNumber = phoneNumber;

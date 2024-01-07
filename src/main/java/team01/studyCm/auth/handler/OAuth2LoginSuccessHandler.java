@@ -7,12 +7,14 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.repository.UserRepository;
+import team01.studyCm.util.EnumUtility;
 
 @RequiredArgsConstructor
 @Component
@@ -37,7 +39,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.sendRedirect("/oauth2/signup");
       }else{
         loginSuccess(response, oAuth2User);
-        response.sendRedirect("/chat/rooms");
+        String job = oAuth2User.getJob();
+        String jobUrl = EnumUtility.jobEnumValueToName(job);
+        response.sendRedirect("/chat/rooms/" + jobUrl);
       }
     }catch (Exception e){
       throw e;

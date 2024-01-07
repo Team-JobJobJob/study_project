@@ -53,32 +53,30 @@
 </head>
 <body>
 
-<div th:if="${chatRooms}">
-
+<div th:if="${chatRooms != null and chatRooms.size() > 0}">
     <table>
         <thead>
         <tr>
             <th>room name</th>
-            <th>user name</th>
-            <th>number</th>
+            <th>description</th>
+            <th>member count</th>
             <th>job</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="x : ${chatRooms}">
-            <td th:text="${x.room_name}"></td>
-            <td th:text="${x.user_name}"></td>
-            <td th:text="${x.number}"></td>
-            <td th:text="${x.job}"></td>
-            <td><button><a th:href="@{'/modifyRoom/' + ${x.room_id}}">수정</a></button></td>
-            <td><button><a th:href="@{'/deleteRoom/' + ${x.room_id}}">삭제</a></button></td>
+        <tr th:each="chatPage : ${chatRooms}">
+            <td th:text="${chatPage.chatName}"></td>
+            <td th:text="${chatPage.description}"></td>
+            <td th:text="${chatPage.memberCnt}"></td>
+            <td th:text="${job}"></td>
+            <td><button><a th:href="@{'modifyRoom/' + ${chatPage.chatId}}">수정</a></button></td>
+            <td><button><a th:href="@{'deleteRoom/' + ${chatPage.chatId}}">삭제</a></button></td>
         </tr>
-
         </tbody>
     </table>
-
 </div>
-<div th:else>
+
+<div th:if="${chatRooms == null}">
     <h1>사용자가 대화방을 만들지 않았습니다</h1>
 </div>
 
