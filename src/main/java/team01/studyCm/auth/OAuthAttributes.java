@@ -1,7 +1,6 @@
 package team01.studyCm.auth;//package team01.studyCm.auth;
 
 import java.util.Map;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import team01.studyCm.auth.userInfo.GoogleOAuth2UserInfo;
@@ -75,7 +74,7 @@ public class OAuthAttributes {
         .socialId(oauth2UserInfo.getId())
         .email(oauth2UserInfo.getEmail())
         .userName(oauth2UserInfo.getName())
-        .role(Role.GUEST)
+        .role(Role.ROLE_GUEST)
         .build();
   }
 

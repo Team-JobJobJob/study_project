@@ -70,8 +70,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(role.getKey()));
-
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -81,7 +80,6 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        //사용자의 아이디(email)반환
         return this.email;
     }
 
@@ -104,13 +102,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
-    public User update(String userName){
-        this.userName = userName;
-        return this;
-    }
-
 
 
 }

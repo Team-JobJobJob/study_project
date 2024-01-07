@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
 
 @Service
@@ -14,7 +15,13 @@ public class UserDetailService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("해당 고객 없음"));
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원."));
+
+    return org.springframework.security.core.userdetails.User.builder()
+        .username(user.getEmail())
+        .password(user.getPassword())
+        .roles(user.getRole().name())
+        .build();
   }
 }

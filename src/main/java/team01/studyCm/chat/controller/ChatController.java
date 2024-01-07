@@ -26,8 +26,9 @@ public class ChatController {
 
 
   @GetMapping("")
-  public String createRoom() {
+  public String createRoom(Model model, Principal principal) {
 
+    model.addAttribute(principal);
     return "chatRooms/createRoom";
 
 
@@ -36,7 +37,7 @@ public class ChatController {
   @PostMapping("")
   public String createRoom(@ModelAttribute ChatDto chatDto, Principal principal) {
 
-    System.out.println("chatRoomDto = " + chatDto);
+    //System.out.println("chatRoomDto = " + chatDto);
 
     chatService.createRoom(chatDto, principal);
 

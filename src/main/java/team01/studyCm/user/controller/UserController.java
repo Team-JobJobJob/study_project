@@ -22,12 +22,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/signin")
+    @GetMapping("/login")
     public String signIn() {
         return "index";
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public String signIn(LoginCredDto signinDto, Principal principal) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);

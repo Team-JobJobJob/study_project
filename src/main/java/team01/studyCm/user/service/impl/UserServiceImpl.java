@@ -2,7 +2,9 @@ package team01.studyCm.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
@@ -19,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean modify(Long userId, UserInfoDto userInfoDto) {
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
         user.setUserName(userName);
         user.setJob(job);
         user.setPassword(password);
+
+        user.passwordEncode(passwordEncoder);
 
         userRepository.save(user);
 
@@ -88,8 +92,8 @@ public class UserServiceImpl implements UserService {
                 .role(Role.ROLE_USER)
                 .build();
 
+        newUser.passwordEncode(passwordEncoder);
         userRepository.save(newUser);
-
         return true;
     }
 

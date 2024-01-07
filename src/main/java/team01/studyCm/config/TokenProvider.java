@@ -27,9 +27,8 @@ import team01.studyCm.user.service.UserDetailService;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-public class TokenProvider {
+public class TokenProvider{
 
-  private static final String KEY_ROLES = "role";
   private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1h
   private static final String BEARER = "Bearer ";
   private final UserDetailService userDetailService;
@@ -77,9 +76,9 @@ public class TokenProvider {
     }
   }
 
-  public Authentication getAuthentication(String jwt) {
-    UserDetails userDetails = this.userDetailService.loadUserByUsername(this.getUsername(jwt));
-    return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+  public Authentication getAuthentication(String accessToken) {
+    UserDetails userDetails = this.userDetailService.loadUserByUsername(this.getUsername(accessToken));
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 
   private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
