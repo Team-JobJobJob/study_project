@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
@@ -89,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 .modified_at(currentTime)
                 .phone(userDto.getPhone())
                 .password(userDto.getPassword())
-                .role(Role.ROLE_USER)
+                .role(Role.USER)
                 .build();
 
         newUser.passwordEncode(passwordEncoder);

@@ -44,13 +44,11 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(requests -> requests
             .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             .anyRequest().authenticated()
         )
-        .formLogin(form -> form
-            .loginPage("/login")
-            .permitAll())
         .oauth2Login(oauth2 -> oauth2
             .successHandler(oAuth2LoginSuccessHandler)
             .failureHandler(oAuth2LoginFailureHandler)

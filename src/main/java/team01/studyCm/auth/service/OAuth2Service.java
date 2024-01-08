@@ -7,7 +7,6 @@ import java.security.Principal;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import team01.studyCm.user.entity.User;
@@ -38,7 +37,7 @@ public class OAuth2Service {
 
     log.debug("Updating user information: {}", user);
     user.setJob(job);
-    user.setRole(Role.ROLE_USER);
+    user.setRole(Role.USER);
     userRepository.save(user);
   }
 

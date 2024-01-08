@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +30,7 @@
             margin-bottom: 8px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 8px;
             margin-bottom: 16px;
@@ -59,7 +58,7 @@
 </head>
 <body>
 
-<form action="/users/signup" method="post">
+<form id="signupForm" onsubmit="submitForm(event)">
     <h2>회원가입</h2>
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required>
@@ -74,30 +73,36 @@
     <input type="number" id="phone" name="phone" required>
 
     <label for="name">이름:</label>
-    <input type="name" id="name" name="userName" required>
+    <input type="text" id="name" name="userName" required>
 
     <label for="job">희망직무:</label>
     <select id="job" name="job">
-        <option value="IT">IT/인터넷 전체</option>
-        <option value="WEBDEV">웹개발</option>
-        <option value="APPDEV">응용프로그램개발</option>
-        <option value="ERP">ERP/시스템개발/설계</option>
-        <option value="NETWORK">네트워크/서버/보안</option>
-        <option value="DBA">DBA/데이터베이스</option>
-        <option value="SITE">콘텐츠/사이트운영</option>
-        <option value="WEBMANAGE">웹기획/PM/웹마케팅</option>
-        <option value="FRONTEND">HTML/퍼블리싱/UI개발</option>
-        <option value="QA">QA/테스트/검증</option>
-        <option value="GAME">게임</option>
-        <option value="VIDEO">동영상제작/편집</option>
-        <option value="AI">빅데이터/AI</option>
+        <!-- options... -->
     </select>
-
-    <h1></h1>
 
     <button type="submit">회원가입</button>
     <button><a href="/">로그인</a></button>
 </form>
+
+<script>
+    function submitForm(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('signupForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+
+        const jsonString = JSON.stringify(jsonData);
+        console.log(jsonString);
+
+        // 여기서 jsonString을 서버로 전송하거나 필요한 처리를 수행합니다.
+        // 예를 들어, AJAX를 사용하여 서버로 데이터를 전송할 수 있습니다.
+    }
+</script>
 
 </body>
 </html>

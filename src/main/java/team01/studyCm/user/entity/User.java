@@ -43,6 +43,7 @@ public class User implements UserDetails {
 
     @Column(name = "user_name")
     private String userName;
+
     private String job;
     private String phone;
 

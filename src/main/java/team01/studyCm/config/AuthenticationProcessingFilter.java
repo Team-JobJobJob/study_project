@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +14,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
+
+@Slf4j
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 
@@ -34,8 +37,10 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
+    log.info("request contentType : {}",request.getContentType());
     if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)  ) {
       throw new RuntimeException("Authentication Content-Type not supported: " + request.getContentType());
+
     }
 
     String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);

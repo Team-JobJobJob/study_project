@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
@@ -15,11 +16,12 @@ import java.security.Principal;
 import java.util.Optional;
 import team01.studyCm.user.service.impl.UserServiceImpl;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final ModelAndView modelAndView = new ModelAndView();
 
     @GetMapping("/login")
     public String signIn() {
@@ -27,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String signIn(LoginCredDto signinDto, Principal principal) {
+    public String signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
@@ -42,11 +44,11 @@ public class UserController {
 
     @GetMapping("users/signup")
     public String signUp() {
-        return "users/signUp";
+        return "users/signup";
     }
 
     @PostMapping("users/signup")
-    public String signUpSubmit(Model model, UserDto userDto) {
+    public String signUpSubmit(Model model, @RequestBody UserDto userDto) {
         System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
@@ -66,7 +68,7 @@ public class UserController {
     }
 
     @PostMapping("users/withdraw")
-    public String withdraw(LoginCredDto deleteDto) {
+    public String withdraw(@RequestBody LoginCredDto deleteDto) {
 
         boolean deleteOutcome = userService.deleteUser(deleteDto);
 
@@ -86,7 +88,7 @@ public class UserController {
     }
 
     @PostMapping("users/modify/{userId}")
-    public String modify(@PathVariable Long userId, UserInfoDto InfoDto) {
+    public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
 
         boolean modifyOutcome = userService.modify(userId, InfoDto);
 

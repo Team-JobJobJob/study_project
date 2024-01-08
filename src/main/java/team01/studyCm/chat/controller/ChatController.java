@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RequestMapping("/chat")
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
 
   private final ChatService chatService;
@@ -82,7 +82,7 @@ public class ChatController {
 
   // 채팅방 수정
   @PostMapping("/modifyRoom/{chatId}")
-  public String modifyRoom(@ModelAttribute ChatDto chatDto, Authentication authentication) {
+  public String modifyRoom(@ModelAttribute @RequestBody ChatDto chatDto, Authentication authentication) {
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
     chatService.modifyRoom(chatDto);

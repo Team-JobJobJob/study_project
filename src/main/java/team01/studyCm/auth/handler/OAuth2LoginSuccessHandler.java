@@ -7,7 +7,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import team01.studyCm.auth.CustomOAuth2User;
@@ -33,7 +32,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
       String email = oAuth2User.getEmail();
 
       //처음 로그인하는 경우 GUEST로 role 설정, 추가 정보 입력받도록 redirect
-      if(oAuth2User.getRole().equals(Role.ROLE_GUEST)){
+      if(oAuth2User.getRole().equals(Role.GUEST)){
         String accessToken = tokenProvider.createAccessToken(oAuth2User.getEmail());
         response.addHeader("Authorization","Bearer "+accessToken);
         response.sendRedirect("/oauth2/signup");

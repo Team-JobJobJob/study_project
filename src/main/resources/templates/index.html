@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Page</title>
+    <title>Login Page</title>
     <!-- Include any additional CSS styling here -->
     <style>
         body {
@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<form action="/login" method="post">
+<form id="loginForm">
     <h2>로그인</h2>
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required>
@@ -66,15 +66,48 @@
     <label for="password">비밀번호:</label>
     <input type="password" id="password" name="password" required>
 
-    <button type="submit">로그인</button>
+    <button type="button" onclick="submitForm()">로그인</button>
     <button> <a href="users/signup">회원가입</a></button>
 
     <h1></h1>
 
-    <button type="submit"><a href="/oauth2/authorization/google">Google Login</a></button>
-    <button><a href="/oauth2/authorization/naver">Naver Login</a></button>
-    <button><a href="/oauth2/authorization/kakao">Kakao Login</a></button>
+    <button type="button" onclick="redirectTo('/oauth2/authorization/google')">Google Login</button>
+    <button type="button" onclick="redirectTo('/oauth2/authorization/naver')">Naver Login</button>
+    <button type="button" onclick="redirectTo('/oauth2/authorization/kakao')">Kakao Login</button>
+
 </form>
+
+<script>
+    function submitForm() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        // HTML 폼 데이터를 JSON으로 변환
+        var formData = {
+            email: email,
+            password: password
+        };
+
+        // Fetch API를 사용하여 JSON 데이터를 서버에 전송
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 서버에서 받은 JSON 데이터 처리
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function redirectTo(url) {
+        window.location.href = url;
+    }
+</script>
 
 </body>
 </html>
