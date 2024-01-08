@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class ChatController {
 
   private final ChatService chatService;
-
+  private final ModelAndView modelAndView = new ModelAndView();
 
   @GetMapping("")
   public String createRoom(Model model, Principal principal) {
@@ -115,19 +116,28 @@ public class ChatController {
   }
 
   @GetMapping("/rooms/{job}")
-  public String getChatList(Model model, @PathVariable String job,
+  public ModelAndView getChatList(Model model, @PathVariable String job,
       @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
       @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
       Pageable pageable, @AuthenticationPrincipal User user, Authentication authentication) {
 
   Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job, orderCreteria);
 
+  if(authentication == null) {
+//    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+    // email tuser id 가져오는 백엔드 만들기?
+//    model.addAttribute("userId", );
+  }
+  else {
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+    model.addAttribute("userId", oAuth2User.getUserId());
+  }
 
     model.addAttribute("chatPageList", chatPageList);
-    model.addAttribute("userId", oAuth2User.getUserId());
 
-    return "chatRooms/ChatRoomList";
+    modelAndView.setViewName("chatRooms/ChatRoomList");
+
+    return modelAndView;
   }
 
 }
