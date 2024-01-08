@@ -29,22 +29,27 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
+    public ModelAndView signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
 
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            return "chatRooms/createRoom";
+            modelAndView.setViewName("chatRooms/createRoom");
+            return modelAndView;
         }
 
         System.out.println(principal);
 
-        return "chatRooms/createRoom";
+        modelAndView.setViewName("chatRooms/createRoom");
+        return modelAndView;
+
     }
 
     @GetMapping("users/signup")
-    public String signUp() {
-        return "users/signup";
+    public ModelAndView signUp() {
+        modelAndView.setViewName("users/signup");
+        return modelAndView;
+
     }
 
     @PostMapping("users/signup")
