@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<form id="loginForm">
+<form id="loginForm" onsubmit="submitForm(event)" th:action = "@{'/login'} " th:method="post">
     <h2>로그인</h2>
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required>
@@ -66,7 +66,7 @@
     <label for="password">비밀번호:</label>
     <input type="password" id="password" name="password" required>
 
-    <button type="button" onclick="submitForm()">로그인</button>
+    <button type="submit">로그인</button>
     <button> <a href="users/signup">회원가입</a></button>
 
     <h1></h1>
@@ -78,7 +78,10 @@
 </form>
 
 <script>
-    function submitForm() {
+    function submitForm(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('loginForm');
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
 
@@ -88,18 +91,31 @@
             password: password
         };
 
+        // var job = null;
+        //
+        // fetch(`/login`, {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(formData)
+        // })
+        //     .then(response => {
+        //         job = response.text()
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+
         // Fetch API를 사용하여 JSON 데이터를 서버에 전송
-        fetch('/login', {
-            method: 'POST',
+        fetch(form.action, {
+            method: form.method,
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
-        .then(data => {
-            // 서버에서 받은 JSON 데이터 처리
-            console.log(data);
+        .then(response => {
         })
         .catch(error => console.error('Error:', error));
     }

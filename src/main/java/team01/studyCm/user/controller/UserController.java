@@ -1,21 +1,23 @@
 package team01.studyCm.user.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
+import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
-
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
@@ -23,49 +25,50 @@ public class UserController {
     private final ModelAndView modelAndView = new ModelAndView();
 
     @GetMapping("/login")
-    public String signIn() {
-        return "index";
+    public ModelAndView signIn() {
+        modelAndView.setViewName("index");
+        return modelAndView;
     }
 
     @PostMapping("/login")
-    public ModelAndView signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
+    public String signIn(@RequestBody LoginCredDto signinDto) {
+        System.out.println("로그인 post");
+
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            modelAndView.setViewName("chatRooms/createRoom");
-            return modelAndView;
+            modelAndView.setViewName("/login");
+            return "redirect:/login";
         }
 
-        System.out.println(principal);
+        modelAndView.setViewName("/chat/rooms/" + userInfo.get().getJob());
 
-        modelAndView.setViewName("chatRooms/createRoom");
-        return modelAndView;
+        return "redirect:/chat/rooms/" + userInfo.get().getJob();
 
     }
 
-    @GetMapping("users/signup")
+    @GetMapping("/users/signup")
     public ModelAndView signUp() {
         modelAndView.setViewName("users/signup");
         return modelAndView;
 
     }
 
-    @PostMapping("users/signup")
-    public ModelAndView signUpSubmit(Model model, @RequestBody UserDto userDto) {
+    @PostMapping("/users/signup")
+    public void signUpSubmit(HttpServletResponse response, @RequestBody UserDto userDto) throws IOException {
         System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 
         if(!userInfo) {
-            modelAndView.setViewName("SignUpFailed");
+            response.sendRedirect("/users/signup");
         }
-        else{
-            model.addAttribute("result", userInfo);
-            log.info("회원가입 성공, 유저 아이디 : {}", userDto.getEmail());
-            modelAndView.setViewName("index");
+        else {
+            System.out.println(userDto);
+//            modelAndView.setViewName("/chat/rooms/" + userDto.getJob());
         }
 
-        return modelAndView;
+        response.sendRedirect("/");
     }
 
     @GetMapping("users/withdraw")
@@ -111,6 +114,12 @@ public class UserController {
         UserDto userDto = userService.findById(userId);
         model.addAttribute("user", userDto);
         return "users/myPage";
+    }
+
+    @GetMapping("/username")
+    @ResponseBody
+    public String currentUserName(Principal principal) {
+        return principal.getName();
     }
 
 }
