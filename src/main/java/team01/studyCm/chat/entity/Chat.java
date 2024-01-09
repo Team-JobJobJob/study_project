@@ -3,6 +3,11 @@ package team01.studyCm.chat.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.web.socket.WebSocketSession;
 import team01.studyCm.chat.dto.ChatDto;
+import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.User;
 
 @Getter
@@ -40,6 +47,8 @@ public class Chat {
   @Column (name = "member_cnt")
   private Integer memberCnt;
 
+  @Column (name = "user_cnt")
+  private Long userCnt;
 
   @Column
   private String job;
@@ -52,6 +61,18 @@ public class Chat {
   @Column
   private LocalDateTime modified_at;
 
+  @ElementCollection
+  @CollectionTable(
+          name = "user_list"
+  )
+  @MapKeyColumn(name="user_id")
+  @Column(name="user_name")
+  private Map<Long,String> userList = new HashMap<>();
+
+
+
+
+
   public static Chat toEntity(ChatDto chatDto) {
     return Chat.builder()
                   .chatName(chatDto.getChatName())
@@ -62,6 +83,7 @@ public class Chat {
                   .modified_at(LocalDateTime.now())
                   .build();
   }
+
 
   public static Chat toEntity(ChatDto chatDto, User loggedInUser) {
     return Chat.builder()
@@ -74,5 +96,7 @@ public class Chat {
             .modified_at(LocalDateTime.now())
             .build();
   }
+
+  // 채팅 관련 메소드
 
 }
