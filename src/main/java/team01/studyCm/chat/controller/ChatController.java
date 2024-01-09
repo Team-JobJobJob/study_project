@@ -90,7 +90,7 @@ public class ChatController {
     String job = user.getJob();
 
     model.addAttribute("chatRooms", chatRooms);
-    model.addAttribute("job", job)
+    model.addAttribute("job", job);
 
 
     //추후에 수정
