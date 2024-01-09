@@ -21,6 +21,7 @@ import team01.studyCm.user.entity.User;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import team01.studyCm.user.service.UserService;
 
 @RequestMapping("/chat")
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class ChatController {
 
   private final ChatService chatService;
+  private final UserService userService;
   private final ModelAndView modelAndView = new ModelAndView();
 
   @GetMapping("")
@@ -41,34 +43,11 @@ public class ChatController {
 
   @PostMapping("")
   public String createRoom(@ModelAttribute ChatDto chatDto, Principal principal) {
-
-    //System.out.println("chatRoomDto = " + chatDto);
-
     chatService.createRoom(chatDto, principal);
 
     return "chatRooms/createRoomComplete";
   }
 
-  // 채팅방 생성
-//  @PostMapping("")
-//  public String createRoom(@ModelAttribute ChatDto chatDto, User user, Principal principal) {
-//
-//    System.out.println("chatRoomDto = " + chatDto);
-//
-//    chatService.createRoom(chatDto, user, principal);
-//
-//    return "chatRooms/createRoomComplete";
-//  }
-
-//  @PostMapping("/{userId}")
-//  public String createRoom(@ModelAttribute ChatDto chatDto, User user) {
-//
-//    System.out.println("chatRoomDto = " + chatDto);
-//
-//    chatService.createRoom(chatDto, user);
-//
-//    return "chatRooms/createRoomComplete";
-//  }
 
   @GetMapping("/modifyRoom/{chatId}")
   public String getModifyRoom(Model model, @PathVariable Long chatId) {
@@ -83,7 +62,8 @@ public class ChatController {
 
   // 채팅방 수정
   @PostMapping("/modifyRoom/{chatId}")
-  public String modifyRoom(@ModelAttribute @RequestBody ChatDto chatDto, Authentication authentication) {
+  public String modifyRoom(@ModelAttribute @RequestBody ChatDto chatDto,
+      Authentication authentication) {
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
     chatService.modifyRoom(chatDto);
@@ -104,12 +84,14 @@ public class ChatController {
   }
 
   @GetMapping("/myChatList")
-  public String myChatRooms(Model model, Authentication authentication) {
-    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-    List<ChatDto> chatRooms = chatService.allChatsByUserEmail(oAuth2User.getEmail());
+  public String myChatRooms(Model model, Principal principal) {
+    List<ChatDto> chatRooms = chatService.allChatsByUserEmail(principal);
+    User user = userService.getUser(principal);
+    String job = user.getJob();
 
     model.addAttribute("chatRooms", chatRooms);
-    model.addAttribute("job", oAuth2User.getJob());
+    model.addAttribute("job", job)
+
 
     //추후에 수정
     return "chatRooms/myChatList";
@@ -119,19 +101,13 @@ public class ChatController {
   public ModelAndView getChatList(Model model, @PathVariable String job,
       @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
       @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
-      Pageable pageable, @AuthenticationPrincipal User user, Authentication authentication) {
+      Pageable pageable, Principal principal) {
 
-  Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job, orderCreteria);
+    User user = userService.getUser(principal);
 
-  if(authentication == null) {
-//    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-    // email tuser id 가져오는 백엔드 만들기?
-//    model.addAttribute("userId", );
-  }
-  else {
-    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-    model.addAttribute("userId", oAuth2User.getUserId());
-  }
+    Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job,
+        orderCreteria);
+
 
     model.addAttribute("chatPageList", chatPageList);
 

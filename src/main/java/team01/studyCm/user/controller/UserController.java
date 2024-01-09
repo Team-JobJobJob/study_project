@@ -1,22 +1,21 @@
 package team01.studyCm.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
-import team01.studyCm.user.repository.UserRepository;
 import team01.studyCm.user.service.UserService;
 
 import java.security.Principal;
 import java.util.Optional;
-import team01.studyCm.user.service.impl.UserServiceImpl;
+
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
@@ -30,7 +29,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
-
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
@@ -53,18 +51,21 @@ public class UserController {
     }
 
     @PostMapping("users/signup")
-    public String signUpSubmit(Model model, @RequestBody UserDto userDto) {
+    public ModelAndView signUpSubmit(Model model, @RequestBody UserDto userDto) {
         System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 
         if(!userInfo) {
-            return "SignUpFailed";
+            modelAndView.setViewName("SignUpFailed");
+        }
+        else{
+            model.addAttribute("result", userInfo);
+            log.info("회원가입 성공, 유저 아이디 : {}", userDto.getEmail());
+            modelAndView.setViewName("index");
         }
 
-        model.addAttribute("result", userInfo);
-
-        return "ChatList";
+        return modelAndView;
     }
 
     @GetMapping("users/withdraw")
@@ -85,17 +86,18 @@ public class UserController {
         return "users/mypage";
     }
 
-    @GetMapping("users/modify/{userId}")
-    public String modify(Model model, @PathVariable Long userId) {
+    @GetMapping("users/modify")
+    public String modify(Model model, Principal principal) {
+        String email = principal.getName();
 
-        model.addAttribute("userId", userId);
+        model.addAttribute("email", email);
         return "users/modify";
     }
 
-    @PostMapping("users/modify/{userId}")
-    public String modify(@PathVariable Long userId, @RequestBody UserInfoDto InfoDto) {
+    @PostMapping("users/modify")
+    public String modify(Principal principal, @RequestBody UserInfoDto InfoDto) {
 
-        boolean modifyOutcome = userService.modify(userId, InfoDto);
+        boolean modifyOutcome = userService.modify(principal, InfoDto);
 
         if(!modifyOutcome) {
             return "users/modify";

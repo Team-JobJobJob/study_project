@@ -57,8 +57,7 @@
     </style>
 </head>
 <body>
-<!--onsubmit="submitForm(event)"-->
-<form id="signupForm" th:action = "@{'/chat/rooms/IT'} " th:method="get">
+<form id="signupForm">
     <h2>회원가입</h2>
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required>
@@ -92,7 +91,7 @@
         <option value="AI">빅데이터/AI</option>
     </select>
 
-    <button type="submit">회원가입</button>
+    <button type="submit" onclick="submitForm(event)">회원가입</button>
     <button><a href="/">로그인</a></button>
 </form>
 
@@ -100,58 +99,41 @@
     function updateFormAction() {
         const form = document.getElementById('signupForm');
         const selectedJob = document.getElementById('job').value;
-
-        // Update the form action attribute with the selected job value
         form.action = `/chat/rooms/${selectedJob}`;
     }
+
+    function submitForm(event) {
+        event.preventDefault();
+        const form = document.getElementById('signupForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+        const selectedJob = document.getElementById('job').value;
+        form.action = `/chat/rooms/${selectedJob}`;
+        const jsonString = JSON.stringify(jsonData);
+        fetch(form.action, {
+            method: form.method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonString
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            window.location.href = "/login";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
 </script>
-
-<!--<script>-->
-<!--    function submitForm(event) {-->
-<!--        event.preventDefault();-->
-
-<!--        const form = document.getElementById('signupForm');-->
-<!--        const formData = new FormData(form);-->
-<!--        const jsonData = {};-->
-
-<!--        formData.forEach((value, key) => {-->
-<!--            jsonData[key] = value;-->
-<!--        });-->
-
-<!--        // Get the selected value from the job select element-->
-<!--        const selectedJob = document.getElementById('job').value;-->
-
-<!--        // Update the form action attribute with the selected job value-->
-<!--        form.action = `/chat/rooms/${selectedJob}`;-->
-<!--        console.log(selectedJob);-->
-
-<!--        const jsonString = JSON.stringify(jsonData);-->
-<!--        console.log(jsonString);-->
-
-<!--        // Send the form using fetch or any other method you prefer-->
-<!--        fetch(form.action, {-->
-<!--            method: form.method,-->
-<!--            headers: {-->
-<!--                'Content-Type': 'application/json'-->
-<!--            },-->
-<!--            body: jsonString-->
-<!--        })-->
-<!--            .then(response => {-->
-<!--                if (!response.ok) {-->
-<!--                    throw new Error('Network response was not ok');-->
-<!--                }-->
-<!--                return response.json();-->
-<!--            })-->
-<!--            .then(data => {-->
-<!--                console.log(data);-->
-<!--                // Handle the response data if needed-->
-<!--            })-->
-<!--            .catch(error => {-->
-<!--                console.error('Error:', error);-->
-<!--            });-->
-<!--        // 예를 들어, AJAX를 사용하여 서버로 데이터를 전송할 수 있습니다.-->
-<!--    }-->
-<!--</script>-->
-
 </body>
 </html>
