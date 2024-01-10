@@ -16,7 +16,7 @@ var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
-var username = null;
+var userName = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -25,10 +25,10 @@ var colors = [
 
 // roomId 파라미터 가져오기
 const url = new URL(location.href).searchParams;
-const roomId = url.get('roomId');
+const chatId = url.get('chatId');
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
+    userName = document.querySelector('#name').value.trim();
 
     // username 중복 확인
     isDuplicateName();
@@ -53,15 +53,15 @@ function connect(event) {
 function onConnected() {
 
     // sub 할 url => /sub/chat/room/roomId 로 구독한다
-    stompClient.subscribe('/sub/chat/room/' + roomId, onMessageReceived);
+    stompClient.subscribe('/sub/chat/room/' + chatId, onMessageReceived);
 
     // 서버에 username 을 가진 유저가 들어왔다는 것을 알림
     // /pub/chat/enterUser 로 메시지를 보냄
     stompClient.send("/pub/chat/enterUser",
         {},
         JSON.stringify({
-            "roomId": roomId,
-            sender: username,
+            "roomId": chatId,
+            sender: userName,
             type: 'ENTER'
         })
     )
@@ -77,13 +77,13 @@ function isDuplicateName() {
         type: "GET",
         url: "/chat/duplicateName",
         data: {
-            "username": username,
-            "roomId": roomId
+            "username": userName,
+            "roomId": chatId
         },
         success: function (data) {
             console.log("함수 동작 확인 : " + data);
 
-            username = data;
+            userName = data;
         }
     })
 
@@ -96,9 +96,9 @@ function getUserList() {
 
     $.ajax({
         type: "GET",
-        url: "/chat/userlist",
+        url: "/chat/userList",
         data: {
-            "roomId": roomId
+            "chatId": chatId
         },
         success: function (data) {
             var users = "";
@@ -123,8 +123,8 @@ function sendMessage(event) {
 
     if (messageContent && stompClient) {
         var chatMessage = {
-            "roomId": roomId,
-            sender: username,
+            "chatId": chatId,
+            sender: userName,
             message: messageInput.value,
             type: 'TALK'
         };
@@ -192,4 +192,3 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
-출처: https://terianp.tistory.com/149 [Terian의 IT 도전기:티스토리]
