@@ -196,6 +196,7 @@ public class ChatService {
   }
 
   // 채팅 관련 메소드
+
   // 채팅방 인원+1
   public void plusUserCnt(Long chatId){
     Chat chat = chatRoomMap.get(chatId);

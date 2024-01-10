@@ -47,6 +47,8 @@ dependencies {
 	implementation group: 'org.webjars.bower', name:'bootstrap', version:'4.3.1'
 	implementation group: 'org.webjars.bower', name:'axios', version:'0.17.1'
 	implementation 'com.google.code.gson:gson:2.9.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+
 
 }
 
