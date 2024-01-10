@@ -3,6 +3,7 @@ package team01.studyCm.chat.service;
 import static team01.studyCm.user.entity.status.SocialType.GOOGLE;
 import static team01.studyCm.user.entity.status.SocialType.NAVER;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,14 @@ public class ChatService {
   private final UserService userService;
 
 
+  private Map<Long, Chat> chatRoomMap;
+
+  @PostConstruct
+  private void init() {
+    chatRoomMap = new LinkedHashMap<>();
+  }
+
+
 //  public void createRoom(ChatDto chatDto, User loggedInUser) {
 //
 //    loggedInUser = // 로그인한 사용자 정보를 가져오거나 생성
@@ -71,6 +80,10 @@ public class ChatService {
         .job(job)
         .user(user)
         .build();
+
+    // map 에 채팅룸 아이디와 만들어진 채팅룸을 저장장
+    chatRoomMap.put(chat.getChatId(), chat);
+
 
     // ChatRoom 엔티티 저장
     chatRepository.save(chat);
@@ -182,6 +195,48 @@ public class ChatService {
         .build();
   }
 
+  // 채팅 관련 메소드
 
+  // 채팅방 인원+1
+  public void plusUserCnt(Long chatId){
+    Chat chat = chatRoomMap.get(chatId);
+    chat.setUserCnt(chat.getUserCnt() + 1);
+  }
+
+  // 채팅방 인원-1
+  public void minusUserCnt(Long chatId){
+    Chat chat = chatRoomMap.get(chatId);
+    chat.setUserCnt(chat.getUserCnt() - 1);
+  }
+
+  // 채팅방 유저 리스트에 유저 추가
+  public Long addUser(Long chatId, String userName, Principal principal){
+    Chat chat = chatRoomMap.get(chatId);
+    User user = userService.getUser(principal);
+    Long userId = user.getUser_id();
+
+    // 아이디 중복 확인 후 userList 에 추가
+    chat.getUserList().put(userId, userName);
+
+    return userId;
+  }
+
+  // 채팅방 유저 리스트 삭제
+  public void delUser(Long chatId, Long userId){
+    Chat chat = chatRoomMap.get(chatId);
+    chat.getUserList().remove(userId);
+  }
+
+  // 채팅방 전체 userlist 조회
+  public ArrayList<String> getUserList(Long chatId){
+    ArrayList<String> list = new ArrayList<>();
+
+    Chat chat = chatRoomMap.get(chatId);
+
+    // hashmap 을 for 문을 돌린 후
+    // value 값만 뽑아내서 list 에 저장 후 reutrn
+    chat.getUserList().forEach((key, value) -> list.add(value));
+    return list;
+  }
 
 }
