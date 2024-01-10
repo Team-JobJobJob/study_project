@@ -55,6 +55,7 @@ public class SecurityConfiguration {
             .userInfoEndpoint(userInfoEndpointConfig ->
                 userInfoEndpointConfig.userService(customOAuth2UserService))
         )
+        .logout(Customizer.withDefaults())
         .addFilterAfter(authenticationProcessingFilter(), LogoutFilter.class)
         .addFilterBefore(jwtAuthenticationFilter(), AuthenticationProcessingFilter.class);
 

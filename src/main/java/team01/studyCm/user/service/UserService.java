@@ -154,7 +154,7 @@ public class UserService {
   public Optional<UserDto> convertToUserDto(User user) {
     return Optional.ofNullable(UserDto.builder()
         .user_id(user.getUser_id())
-        .userName(user.getUsername())
+        .userName(user.getUserName())
         .email(user.getEmail())
         .job(user.getJob())
         .created_at(user.getCreated_at())

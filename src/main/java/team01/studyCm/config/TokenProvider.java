@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -76,10 +77,6 @@ public class TokenProvider{
     }
   }
 
-  public Authentication getAuthentication(String accessToken) {
-    UserDetails userDetails = this.userDetailService.loadUserByUsername(this.getUsername(accessToken));
-    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-  }
 
   private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
     response.setHeader(accessHeader, accessToken);
@@ -119,7 +116,14 @@ public class TokenProvider{
     response.setStatus(HttpServletResponse.SC_OK);
     setAccessTokenHeader(response, accessToken);
     setRefreshTokenHeader(response, refreshToken);
+    response.setStatus(HttpStatus.OK.value());
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("application/json;charset=UTF-8");
 
+    log.info("Access Token : " + accessToken);
+    log.info("Refresh Token : " + refreshToken);
+
+    log.info("Access Token, Refresh Token 헤더 및 쿠키 설정 완료");
   }
 
   // 헤더에서 RefreshToken추출 ->  헤더 가져온 후 Bearer삭제

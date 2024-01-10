@@ -1,14 +1,12 @@
 package team01.studyCm.chat.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +14,7 @@ import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
 import team01.studyCm.chat.service.ChatService;
+import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 
 import java.security.Principal;
@@ -26,6 +25,7 @@ import team01.studyCm.user.service.UserService;
 @RequestMapping("/chat")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class ChatController {
 
   private final ChatService chatService;
@@ -92,7 +92,6 @@ public class ChatController {
     model.addAttribute("chatRooms", chatRooms);
     model.addAttribute("job", job);
 
-
     //추후에 수정
     return "chatRooms/myChatList";
   }
@@ -101,13 +100,10 @@ public class ChatController {
   public ModelAndView getChatList(Model model, @PathVariable String job,
       @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
       @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
-      Pageable pageable, Principal principal) {
-
-    User user = userService.getUser(principal);
+      Pageable pageable, Principal principal, @AuthenticationPrincipal PrincipalDetails details) {
 
     Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job,
         orderCreteria);
-
 
     model.addAttribute("chatPageList", chatPageList);
 

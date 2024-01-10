@@ -3,10 +3,7 @@ package team01.studyCm.chat.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
 import team01.studyCm.chat.entity.Chat;
-import team01.studyCm.user.entity.User;
 
 @Getter
 @AllArgsConstructor

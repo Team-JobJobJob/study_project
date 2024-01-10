@@ -1,25 +1,23 @@
 package team01.studyCm.user.handler;
 
-import jakarta.servlet.ServletException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Principal;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import team01.studyCm.auth.CustomOAuth2User;
+import team01.studyCm.config.TokenDto;
 import team01.studyCm.config.TokenProvider;
+import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
+import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
-import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.repository.UserRepository;
 
 @RequiredArgsConstructor
@@ -44,12 +42,40 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
                 user.setRefreshToken(refreshToken);
                 userRepository.saveAndFlush(user);
               });
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
       log.info("로그인에 성공하였습니다. 이메일 : {}", email);
       log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);
 
 
+      PrincipalDetails userDetials = (PrincipalDetails) authentication.getPrincipal();
+      String userEmail = userDetials.getEmail();
+      log.info("get email from PrincipalDetails : {}", userEmail);
+      User user = userRepository.findByEmail(userEmail)
+          .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자"));
+
+      TokenDto tokenDto = TokenDto.builder()
+          .accessToken(accessToken)
+          .refreshToken(refreshToken)
+          .userDto(UserDto.from(user))
+          .build();
+
+      // TokenDto를 JSON 문자열로 변환하여 응답
+      String tokenJson = new ObjectMapper().writeValueAsString(tokenDto);
+
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+      response.setStatus(HttpServletResponse.SC_OK);
+      response.getWriter().write(tokenJson);
+
+      String job = user.getJob();
       // job을 불러올 수 있는 방법
-      response.sendRedirect("/chat/rooms/IT");
+//      if (!response.isCommitted()){
+//        response.sendRedirect("/chat/rooms/"+job);
+//      }else{
+//        log.info("response.isCommitted");
+//      }
+
     }
     catch (Exception e){
       throw e;
@@ -57,7 +83,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
   }
 
   private String extractUsername(Authentication authentication) {
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    PrincipalDetails userDetails = (PrincipalDetails) authentication.getPrincipal();
     return userDetails.getUsername();
   }
 

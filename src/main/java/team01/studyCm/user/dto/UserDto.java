@@ -25,12 +25,21 @@ public class UserDto {
     public static UserDto toUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setUser_id(user.getUser_id());
-        userDto.setUserName(user.getUsername());
+        userDto.setUserName(user.getUserName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setPhone(user.getPhone());
         userDto.setJob(user.getJob());
 
         return userDto;
+    }
+
+    public static UserDto from(User user){
+        return UserDto.builder()
+            .user_id(user.getUser_id())
+            .userName(user.getUserName())
+            .role(user.getRole())
+            .build();
+
     }
 }

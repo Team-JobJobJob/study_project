@@ -1,23 +1,23 @@
 package team01.studyCm.user.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
-import team01.studyCm.user.repository.UserRepository;
+import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.service.UserService;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
+
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
@@ -25,50 +25,49 @@ public class UserController {
     private final ModelAndView modelAndView = new ModelAndView();
 
     @GetMapping("/login")
-    public ModelAndView signIn() {
-        modelAndView.setViewName("index");
-        return modelAndView;
+    public String signIn() {
+        return "index";
     }
 
     @PostMapping("/login")
-    public String signIn(@RequestBody LoginCredDto signinDto) {
-        System.out.println("로그인 post");
-
+    public ModelAndView signIn(@RequestBody LoginCredDto signinDto, Principal principal) {
         Optional<UserDto> userInfo = userService.signIn(signinDto);
 
         if(userInfo.isEmpty()) {
-            modelAndView.setViewName("/login");
-            return "redirect:/login";
+            modelAndView.setViewName("chatRooms/createRoom");
+            return modelAndView;
         }
 
-        modelAndView.setViewName("/chat/rooms/" + userInfo.get().getJob());
+        System.out.println(principal);
 
-        return "redirect:/chat/rooms/" + userInfo.get().getJob();
+        modelAndView.setViewName("chatRooms/createRoom");
+        return modelAndView;
 
     }
 
-    @GetMapping("/users/signup")
+    @GetMapping("users/signup")
     public ModelAndView signUp() {
         modelAndView.setViewName("users/signup");
         return modelAndView;
 
     }
 
-    @PostMapping("/users/signup")
-    public void signUpSubmit(HttpServletResponse response, @RequestBody UserDto userDto) throws IOException {
+    @PostMapping("users/signup")
+    public ModelAndView signUpSubmit(Model model, @RequestBody UserDto userDto) {
         System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 
         if(!userInfo) {
-            response.sendRedirect("/users/signup");
+            modelAndView.setViewName("SignUpFailed");
         }
-        else {
-            System.out.println(userDto);
-//            modelAndView.setViewName("/chat/rooms/" + userDto.getJob());
+        else{
+            model.addAttribute("result", userInfo);
+            log.info("회원가입 성공, 유저 아이디 : {}", userDto.getEmail());
+            modelAndView.setViewName("index");
         }
 
-        response.sendRedirect("/");
+        return modelAndView;
     }
 
     @GetMapping("users/withdraw")
@@ -90,8 +89,14 @@ public class UserController {
     }
 
     @GetMapping("users/modify")
-    public String modify(Model model, Principal principal) {
-        String email = principal.getName();
+    public String modify(Model model, Principal principal, @AuthenticationPrincipal
+        PrincipalDetails details) {
+        String email;
+        if (principal != null){
+            email = principal.getName();
+        }else{
+            email = details.getEmail();
+        }
 
         model.addAttribute("email", email);
         return "users/modify";
@@ -114,12 +119,6 @@ public class UserController {
         UserDto userDto = userService.findById(userId);
         model.addAttribute("user", userDto);
         return "users/myPage";
-    }
-
-    @GetMapping("/username")
-    @ResponseBody
-    public String currentUserName(Principal principal) {
-        return principal.getName();
     }
 
 }

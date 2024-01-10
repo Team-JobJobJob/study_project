@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
 
@@ -18,10 +19,6 @@ public class UserDetailService implements UserDetailsService {
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원."));
 
-    return org.springframework.security.core.userdetails.User.builder()
-        .username(user.getEmail())
-        .password(user.getPassword())
-        .roles(user.getRole().name())
-        .build();
+    return PrincipalDetails.create(user);
   }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
+import team01.studyCm.user.dto.UserDto;
 
 
 @Slf4j
@@ -43,15 +44,20 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
     }
 
-    String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+//    String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+//
+//    Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
+//
+//    String email = usernamePasswordMap.get(USERNAME);
+//    String password = usernamePasswordMap.get(PASSWORD);
+//
+//    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(email, password);//principal 과 credentials 전달
+//
+//    return this.getAuthenticationManager().authenticate(authRequest);
 
-    Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
-
-    String email = usernamePasswordMap.get(USERNAME);
-    String password = usernamePasswordMap.get(PASSWORD);
-
-    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(email, password);//principal 과 credentials 전달
-
-    return this.getAuthenticationManager().authenticate(authRequest);
+    ObjectMapper mapper = new ObjectMapper();
+    UserDto userDto = mapper.readValue(request.getInputStream(), UserDto.class);
+    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword());
+    return getAuthenticationManager().authenticate(authenticationToken);
   }
 }

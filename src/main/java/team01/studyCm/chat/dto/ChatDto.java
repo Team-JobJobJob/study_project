@@ -1,8 +1,6 @@
 package team01.studyCm.chat.dto;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
