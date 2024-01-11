@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,7 +66,7 @@
 
 
   <button type="submit">채팅방 생성</button>
-  <a href="/chat/room"><button type="button">취소</button></a>
+  <button type="button"><a th:href="@{'chat/rooms/' + ${job}}">취소</a></button>
 </form>
 </body>
 </html>

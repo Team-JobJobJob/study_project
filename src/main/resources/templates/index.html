@@ -115,8 +115,30 @@
             },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                if (response.redirected) {
+                    // Get the redirected URL from the headers
+                    const redirectedUrl = response.url;
+                    console.log('Redirected URL:', redirectedUrl);
+                    window.location.href = redirectedUrl;
+                }
+
+                return response.text();
+            })
+            // .then(htmlContent => {
+            //     // Create a new HTML document
+            //     // window.location.href = "/rooms/{job}";
+            //     var newDocument = new DOMParser().parseFromString(htmlContent, 'text/html');
+            //
+            //     // Set the new document as the current document
+            //     document.open();
+            //     document.write(newDocument.documentElement.outerHTML);
+            //     document.close();
+            // })
         .catch(error => console.error('Error:', error));
     }
 

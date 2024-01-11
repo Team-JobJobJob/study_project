@@ -66,7 +66,7 @@
 
 
     <button type="submit">채팅방 수정</button>
-    <a href="/chat/room"><button type="button">취소</button></a>
+    <button type="button"><a th:href="@{'/chat/rooms/' + ${job}}">취소</a></button>
 </form>
 </body>
 </html>

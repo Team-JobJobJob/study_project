@@ -1,5 +1,9 @@
 package team01.studyCm.chat.controller;
 
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -7,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,14 +22,17 @@ import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import team01.studyCm.user.service.UserService;
+import team01.studyCm.util.CookieUtility;
 
 @RequestMapping("/chat")
 @RequiredArgsConstructor
-@RestController
+@Controller
 @Slf4j
 public class ChatController {
 
@@ -33,19 +41,37 @@ public class ChatController {
   private final ModelAndView modelAndView = new ModelAndView();
 
   @GetMapping("")
-  public String createRoom(Model model, Principal principal) {
+  public String createRoom(HttpServletRequest request, Model model, Principal principal) {
 
-    model.addAttribute(principal);
+    if(principal != null) {
+      model.addAttribute(principal);
+    }
+    else{
+      Map<String, String> map = CookieUtility.getCookie(request);
+      String job = map.get("userJob");
+      model.addAttribute("job", job);
+    }
+
     return "chatRooms/createRoom";
 
 
   }
 
   @PostMapping("")
-  public String createRoom(@ModelAttribute ChatDto chatDto, Principal principal) {
-    chatService.createRoom(chatDto, principal);
+  public String createRoom(Model model, HttpServletRequest request, @ModelAttribute ChatDto chatDto, Principal principal) {
 
-    return "chatRooms/createRoomComplete";
+    if(principal != null) {
+      chatService.createRoomWithPrincipal(chatDto, principal);
+    }
+    else {
+      Map<String, String> map = CookieUtility.getCookie(request);
+      String email = map.get("userEmail");
+      chatService.createRoom(chatDto, email);
+    }
+
+    model.addAttribute("job", chatDto.getJob());
+
+    return "redirect:/chat/rooms/" + chatDto.getJob();
   }
 
 
@@ -57,59 +83,95 @@ public class ChatController {
     model.addAttribute("chatName", info.getChatName());
     model.addAttribute("description", info.getDescription());
     model.addAttribute("memberCnt", info.getMemberCnt());
+    model.addAttribute("job", info.getJob());
+    log.info(info.getJob());
     return "chatRooms/modifyRoom";
   }
 
   // 채팅방 수정
   @PostMapping("/modifyRoom/{chatId}")
-  public String modifyRoom(@ModelAttribute @RequestBody ChatDto chatDto,
+  public String modifyRoom(HttpServletRequest request, @ModelAttribute @RequestBody ChatDto chatDto,
       Authentication authentication) {
-    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-    chatService.modifyRoom(chatDto);
+    if(authentication != null) {
+      CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+      chatService.modifyRoom(chatDto);
 
-    //추후에 수정
-    return "redirect:/chat/rooms/" + oAuth2User.getJob();
+      return "redirect:/chat/rooms/" + oAuth2User.getJob();
+    }
+    else{
+      Map<String, String> map = CookieUtility.getCookie(request);
+      String job = map.get("userJob");
+      chatService.modifyRoom(chatDto);
+
+      return "redirect:/chat/rooms/" + job;
+    }
   }
 
   // 채팅방 삭제
-  @GetMapping("/deleteRoom/{chatId}")
-  public String deleteRoom(@PathVariable Long chatId, Authentication authentication) {
-    CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+  //org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported
+  @DeleteMapping("/deleteRoom/{chatId}")
+  public String deleteRoom(HttpServletRequest request, @PathVariable Long chatId, Authentication authentication) {
 
     chatService.deleteRoom(chatId);
 
-    //추후에 수정
-    return "redirect:/chat/rooms/" + oAuth2User.getJob();
+    log.info(String.valueOf(chatId));
+
+    if(authentication == null) {
+      Map<String, String> map = CookieUtility.getCookie(request);
+      String job = map.get("userJob");
+      log.info("return auth null" + job);
+      return "redirect:/chat/rooms/" + job;
+    }
+    else {
+      CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+      log.info("return " + oAuth2User.getJob());
+
+      //추후에 수정
+      return "redirect:/chat/rooms/" + oAuth2User.getJob();
+    }
   }
 
   @GetMapping("/myChatList")
-  public String myChatRooms(Model model, Principal principal) {
-    List<ChatDto> chatRooms = chatService.allChatsByUserEmail(principal);
-    User user = userService.getUser(principal);
-    String job = user.getJob();
+  public String myChatRooms(HttpServletRequest request, Model model, Principal principal) {
+    List<ChatDto> chatRooms;
+    String job;
+    if(principal == null) {
+      Map<String, String> map = CookieUtility.getCookie(request);
+      chatRooms = chatService.allChatsByUserEmail(map.get("userEmail"));
+      job = map.get("userJob");
+    }
+    else {
+      chatRooms = chatService.allChatsByUserEmail(principal);
+      User user = userService.getUser(principal);
+      job = user.getJob();
+    }
 
     model.addAttribute("chatRooms", chatRooms);
     model.addAttribute("job", job);
+
+    log.info(String.valueOf(chatRooms));
+    log.info(job);
 
     //추후에 수정
     return "chatRooms/myChatList";
   }
 
   @GetMapping("/rooms/{job}")
-  public ModelAndView getChatList(Model model, @PathVariable String job,
-      @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-      @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
-      Pageable pageable, Principal principal, @AuthenticationPrincipal PrincipalDetails details) {
+  public String getChatList(Model model, @PathVariable String job,
+                                  @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                  @RequestParam(required = false, defaultValue = "chatId", value = "orderby") String orderCreteria,
+                                  Pageable pageable) {
 
+    log.info("rooms 입장 성공");
     Page<ChatPageDto> chatPageList = chatService.getChatRoomList(pageable, pageNo, job,
         orderCreteria);
 
     model.addAttribute("chatPageList", chatPageList);
 
-    modelAndView.setViewName("chatRooms/ChatRoomList");
+//    modelAndView.setViewName("chatRooms/ChatRoomList");
 
-    return modelAndView;
+    return "chatRooms/ChatRoomList";
   }
 
 }

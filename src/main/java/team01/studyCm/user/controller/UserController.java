@@ -1,8 +1,10 @@
 package team01.studyCm.user.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,12 +13,13 @@ import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
 import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.service.UserService;
+import team01.studyCm.util.CookieUtility;
 
 import java.security.Principal;
 import java.util.Optional;
 
 
-@RestController
+@Controller
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
@@ -46,28 +49,27 @@ public class UserController {
     }
 
     @GetMapping("users/signup")
-    public ModelAndView signUp() {
-        modelAndView.setViewName("users/signup");
-        return modelAndView;
+    public String signUp() {
+        return "users/signup";
 
     }
 
     @PostMapping("users/signup")
-    public ModelAndView signUpSubmit(Model model, @RequestBody UserDto userDto) {
+    public String signUpSubmit(Model model, HttpServletResponse response, @RequestBody UserDto userDto) {
         System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 
         if(!userInfo) {
-            modelAndView.setViewName("SignUpFailed");
+            return "users/signup";
         }
         else{
             model.addAttribute("result", userInfo);
+            CookieUtility.setUserCookie(response, userDto);
             log.info("회원가입 성공, 유저 아이디 : {}", userDto.getEmail());
-            modelAndView.setViewName("index");
         }
 
-        return modelAndView;
+        return "index";
     }
 
     @GetMapping("users/withdraw")

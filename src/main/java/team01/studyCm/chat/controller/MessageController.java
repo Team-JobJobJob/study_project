@@ -31,11 +31,11 @@ public class MessageController {
     }
 
     // 채팅에 참여한 유저 리스트 반환
-    @GetMapping("/chat/userlist")
-    @ResponseBody
-    public ArrayList<String> userList(Long chatId) {
-
-        return chatService.getUserList(chatId);
-    }
+//    @GetMapping("/chat/userlist")
+//    @ResponseBody
+//    public ArrayList<String> userList(Long chatId) {
+//
+//        return chatService.getUserList(chatId);
+//    }
 
 }

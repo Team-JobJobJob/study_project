@@ -69,6 +69,17 @@ public class UserService {
     return user;
   }
 
+  public User getUserByEmail(String email){
+
+    log.info("User email : {}", email);
+
+    User user= userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("존재하지 않는 회원"));
+
+
+    return user;
+  }
+
   private String getEmailByToken(OAuth2AuthenticationToken authenticationToken) {
     String email = null;
 

@@ -54,7 +54,7 @@ public class ChatService {
 //
 //  }
 
-  public void createRoom(ChatDto chatDto,Principal principal) {
+  public void createRoomWithPrincipal(ChatDto chatDto,Principal principal) {
     User user = userService.getUser(principal);
     String job = user.getJob();
 
@@ -72,6 +72,30 @@ public class ChatService {
         .user(user)
         .build();
 
+    chatDto.setJob(job);
+    // ChatRoom 엔티티 저장
+    chatRepository.save(chat);
+  }
+
+  public void createRoom(ChatDto chatDto,String email) {
+    User user = userService.getUserByEmail(email);
+    String job = user.getJob();
+
+// getOtherDtoFields를 이용하여 다른 필드들을 가져옴
+
+
+    // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
+    Chat chat = Chat.builder()
+            .chatName(chatDto.getChatName())
+            .description(chatDto.getDescription())
+            .memberCnt(chatDto.getMemberCnt())
+            .created_at(chatDto.getCreated_at())
+            .modified_at(chatDto.getModified_at())
+            .job(job)
+            .user(user)
+            .build();
+
+    chatDto.setJob(job);
     // ChatRoom 엔티티 저장
     chatRepository.save(chat);
   }
@@ -117,6 +141,7 @@ public class ChatService {
     data.setChatName(chatDto.getChatName());
     data.setDescription(chatDto.getDescription());
     data.setMemberCnt(chatDto.getMemberCnt());
+    chatDto.setJob(data.getJob());
 
     chatRepository.save(data);
   }
@@ -152,6 +177,15 @@ public class ChatService {
     return ret;
   }
 
+  public List<ChatDto> allChatsByUserEmail(String email) {
+    List<Chat> chatRooms =  chatRepository.findAllByUser_Email(email);
+    List<ChatDto> ret = new ArrayList<>();
+    for (Chat chat : chatRooms) {
+      ret.add(convertToChatDto(chat));
+    }
+    return ret;
+  }
+
   public Page<ChatPageDto> getChatRoomList(Pageable pageable, int pageNo, String job,
       String orderCreteria) {
     pageable = PageRequest.of(pageNo, 10, Sort.by(Direction.ASC, orderCreteria));
@@ -179,6 +213,7 @@ public class ChatService {
         .memberCnt(chat.getMemberCnt())
         .user(chat.getUser())
         .chatName(chat.getChatName())
+            .job(chat.getJob())
         .build();
   }
 

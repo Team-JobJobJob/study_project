@@ -19,6 +19,7 @@ import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
+import team01.studyCm.util.CookieUtility;
 
 @RequiredArgsConstructor
 @Component
@@ -54,21 +55,26 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
       User user = userRepository.findByEmail(userEmail)
           .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자"));
 
-      TokenDto tokenDto = TokenDto.builder()
-          .accessToken(accessToken)
-          .refreshToken(refreshToken)
-          .userDto(UserDto.from(user))
-          .build();
+      //일단은 쿠키에 담는다
+      UserDto userDto = UserDto.toUserDto(user);
+      CookieUtility.setUserCookie(response, userDto);
 
-      // TokenDto를 JSON 문자열로 변환하여 응답
-      String tokenJson = new ObjectMapper().writeValueAsString(tokenDto);
-
-      response.setContentType("application/json");
-      response.setCharacterEncoding("UTF-8");
-      response.setStatus(HttpServletResponse.SC_OK);
-      response.getWriter().write(tokenJson);
+//      TokenDto tokenDto = TokenDto.builder()
+//          .accessToken(accessToken)
+//          .refreshToken(refreshToken)
+//          .userDto(UserDto.from(user))
+//          .build();
+//
+//      // TokenDto를 JSON 문자열로 변환하여 응답
+//      String tokenJson = new ObjectMapper().writeValueAsString(tokenDto);
+//
+//      response.setContentType("application/json");
+//      response.setCharacterEncoding("UTF-8");
+//      response.setStatus(HttpServletResponse.SC_OK);
+//      response.getWriter().write(tokenJson);
 
       String job = user.getJob();
+      response.sendRedirect("/chat/rooms/" + job);
       // job을 불러올 수 있는 방법
 //      if (!response.isCommitted()){
 //        response.sendRedirect("/chat/rooms/"+job);

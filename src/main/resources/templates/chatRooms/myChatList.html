@@ -70,15 +70,45 @@
             <td th:text="${chatPage.memberCnt}"></td>
             <td th:text="${job}"></td>
             <td><button><a th:href="@{'modifyRoom/' + ${chatPage.chatId}}">수정</a></button></td>
-            <td><button><a th:href="@{'deleteRoom/' + ${chatPage.chatId}}">삭제</a></button></td>
+            <td><button th:onclick="'deleteForm(\'' + ${chatPage.chatId} + '\')'"><a>삭제</a></button></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div th:if="${chatRooms == null}">
+<div th:if="${chatRooms == null  || chatRooms.size() == 0}">
     <h1>사용자가 대화방을 만들지 않았습니다</h1>
+    <button type="button"><a th:href="'rooms/' + ${job}">이전으로</a></button>
 </div>
+
+<script th:inline="javascript">
+    function deleteForm(chatId) {
+
+        // Fetch API를 사용하여 JSON 데이터를 서버에 전송
+        fetch("deleteRoom/" + chatId, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                // if (!response.ok) {
+                //     throw new Error('Network response was not ok');
+                // }
+
+                if (response.redirected) {
+                    // Get the redirected URL from the headers
+                    const redirectedUrl = response.url;
+                    console.log('Redirected URL:', redirectedUrl);
+                    window.location.href = redirectedUrl;
+                }
+
+                return response.text();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+</script>
 
 </body>
 </html>
