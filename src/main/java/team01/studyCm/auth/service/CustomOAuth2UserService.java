@@ -35,6 +35,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     String registrationId = userRequest.getClientRegistration().getRegistrationId();
     SocialType socialType = getSocialType(registrationId);
     String userNameAttributeName = userRequest.getClientRegistration()
+
         .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
     Map<String, Object> attributes = oAuth2User.getAttributes();
 
@@ -79,4 +80,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     return userRepository.save(createdUser);
   }
 
+
 }
+

@@ -13,14 +13,15 @@ import team01.studyCm.user.entity.status.SocialType;
 
 @Getter
 public class OAuthAttributes {
-  private String nameAttributeKey; //OAuth2 로그인 진행 시 기본키 역할 하는 필드값
-  private OAuth2UserInfo oAuth2UserInfo; //소셜 타입별 로그인 유저 정보
+  private String nameAttributeKey; 
+  private OAuth2UserInfo oAuth2UserInfo;
 
   @Builder
   private OAuthAttributes(String nameAttributeKey, OAuth2UserInfo oAuth2UserInfo){
     this.nameAttributeKey = nameAttributeKey;
     this.oAuth2UserInfo = oAuth2UserInfo;
   }
+
 
 
   public static OAuthAttributes of(SocialType socialType, String userNameAttributeName,
@@ -55,6 +56,7 @@ public class OAuthAttributes {
         .oAuth2UserInfo(new KakaoOAuth2UserInfo(attributes))
         .build();
   }
+
 
   public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
     return User.builder()

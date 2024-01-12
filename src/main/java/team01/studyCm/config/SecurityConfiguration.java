@@ -30,7 +30,6 @@ import team01.studyCm.user.service.UserDetailService;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-  //private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final CustomOAuth2UserService customOAuth2UserService;
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
@@ -100,7 +99,6 @@ public class SecurityConfiguration {
     authenticationProcessingFilter.setAuthenticationFailureHandler(userLoginFailureHandler());
     return authenticationProcessingFilter;
   }
-
 
 
 }

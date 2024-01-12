@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Include any additional CSS styling here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<form id="loginForm" onsubmit="submitForm(event)" th:action = "@{'/login'} " th:method="post">
+    <h2>로그인</h2>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">로그인</button>
+    <button> <a href="users/signup">회원가입</a></button>
+
+    <h1></h1>
+
+    <button type="button" onclick="redirectTo('/oauth2/authorization/google')">Google Login</button>
+    <button type="button" onclick="redirectTo('/oauth2/authorization/naver')">Naver Login</button>
+    <button type="button" onclick="redirectTo('/oauth2/authorization/kakao')">Kakao Login</button>
+
+</form>
+
+<script>
+    function submitForm(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('loginForm');
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        // HTML 폼 데이터를 JSON으로 변환
+        var formData = {
+            email: email,
+            password: password
+        };
+
+        // var job = null;
+        //
+        // fetch(`/login`, {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(formData)
+        // })
+        //     .then(response => {
+        //         job = response.text()
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+
+        // Fetch API를 사용하여 JSON 데이터를 서버에 전송
+        fetch(form.action, {
+            method: form.method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                if (response.redirected) {
+                    // Get the redirected URL from the headers
+                    const redirectedUrl = response.url;
+                    console.log('Redirected URL:', redirectedUrl);
+                    window.location.href = redirectedUrl;
+                }
+
+                return response.text();
+            })
+            // .then(htmlContent => {
+            //     // Create a new HTML document
+            //     // window.location.href = "/rooms/{job}";
+            //     var newDocument = new DOMParser().parseFromString(htmlContent, 'text/html');
+            //
+            //     // Set the new document as the current document
+            //     document.open();
+            //     document.write(newDocument.documentElement.outerHTML);
+            //     document.close();
+            // })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function redirectTo(url) {
+        window.location.href = url;
+    }
+</script>
+
+</body>
+</html>

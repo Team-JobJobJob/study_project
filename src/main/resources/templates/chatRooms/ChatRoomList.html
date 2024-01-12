@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>채팅방 목록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 700px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto; /* Enable horizontal scrolling if needed */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px; /* Add some space below the table */
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      background-color: #4CAF50; /* Bright green color */
+      color: #fff;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: flex-end; /* Align content to the right */
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav li {
+      margin-right: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffd54f; /* Light yellow color on hover */
+    }
+
+  </style>
+</head>
+<body>
+
+<form th:action = "@{'/chat/rooms/' + ${job}} " th:method="get">
+  <header>
+    <nav>
+      <ul>
+        <li><button><a href="/chat/myChatList">My Page</a></button></li>
+        <li><a href="/chat">Create Chat</a></li>
+      </ul>
+    </nav>
+  </header>
+  <h2> 채팅방 목록 </h2>
+  <div class="table-container">
+    <table th:border="1" th:width="500" th:height="300" th:align = "center">
+      <thead>
+      <tr>
+        <th scope="col">채팅방 이름</th>
+        <th scope="col">상세설명</th>
+        <th scope="col">최대 인원</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="chatPage: ${chatPageList.content}">
+        <td th:text="${chatPage.chatName}"></td>
+        <td th:text="${chatPage.description}"></td>
+        <td th:text="${chatPage.memberCnt}"></td>
+        <td>
+          <a th:href="@{'/chat/' + ${chatPage.chatId}}" class="btn btn-primary">입장</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:if="${chatPageList.totalPages > 1}" class="container">
+    <ul class="pagination pagination-primary m-4">
+
+      <li class="page-item">
+        <a class="page-link" th:href="@{/chat/rooms?page=1}" aria-level="First">
+          <span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span>
+        </a>
+      </li>
+
+      <li class="page-item" th:class="${chatPageList.number == 0} ? 'disabled'">
+        <a class="page-link" th:href="@{/chat/rooms?page=${chatPageList.number - 1}}" aria-level="Previous">&lsaquo;</a>
+        <span aria-hidden="true"></span>
+      </li>
+
+      <li th:each="pageNumber: ${#numbers.sequence(0, chatPageList.totalPages - 1)}"
+          th:class="${chatPageList.number == pageNumber} ? 'page-item active'">
+        <a class="page-link" th:text="${pageNumber + 1}"
+           th:href="@{/chat/rooms?page=${pageNumber}}"></a>
+      </li>
+
+      <li class="page-item" th:class="${chatPageList.number + 1 == chatPageList.totalPages} ? 'disabled'">
+        <a class="page-link" th:href="@{/chat/rooms?page=${chatPageList.number + 1}}" aria-level="Next">&rsaquo;</a>
+        <span aria-hidden="true"></span>
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" th:href="@{/chat/rooms?page=${chatPageList.totalPages}}" aria-level="Last">
+          <span aria-hidden="true"><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+</form>
+
+</body>
+</html>

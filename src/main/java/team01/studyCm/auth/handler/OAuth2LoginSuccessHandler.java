@@ -13,7 +13,8 @@ import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.repository.UserRepository;
-//import team01.studyCm.util.EnumUtility;
+
+import team01.studyCm.util.EnumUtility;
 
 @RequiredArgsConstructor
 @Component

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Page</title>
+  <!-- Include any additional CSS styling here -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<form action="/oauth2/signup" method="post">
+  <h2>회원가입</h2>
+
+  <label for="job">희망직무:</label>
+  <select id="job" name="job">
+    <option value="IT">IT/인터넷 전체</option>
+    <option value="WEBDEV">웹개발</option>
+    <option value="APPDEV">응용프로그램개발</option>
+    <option value="ERP">ERP/시스템개발/설계</option>
+    <option value="NETWORK">네트워크/서버/보안</option>
+    <option value="DBA">DBA/데이터베이스</option>
+    <option value="SITE">콘텐츠/사이트운영</option>
+    <option value="WEBMANAGE">웹기획/PM/웹마케팅</option>
+    <option value="FRONTEND">HTML/퍼블리싱/UI개발</option>
+    <option value="QA">QA/테스트/검증</option>
+    <option value="GAME">게임</option>
+    <option value="VIDEO">동영상제작/편집</option>
+    <option value="AI">빅데이터/AI</option>
+  </select>
+  <h1></h1>
+
+
+  <button type="submit">회원가입</button>
+</form>
+
+</body>
+</html>

@@ -38,7 +38,6 @@ public class CustomOAuth2User extends DefaultOAuth2User {
       String email, Long userId, String job, Role role, String phoneNumber) {
     super(authorities, attributes, nameAttributeKey);
 
-
     this.userId = userId;
     this.job = job;
     this.email = email;
@@ -53,5 +52,5 @@ public class CustomOAuth2User extends DefaultOAuth2User {
     return modifiedAttributes;
   }
 
-
 }
+

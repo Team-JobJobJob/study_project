@@ -27,4 +27,5 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
   public String getPhone() {
     return (String) attributes.get("phoneNumber");
   }
+
 }

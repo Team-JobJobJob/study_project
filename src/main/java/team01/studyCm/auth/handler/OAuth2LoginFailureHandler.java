@@ -20,4 +20,7 @@ public class OAuth2LoginFailureHandler implements AuthenticationFailureHandler {
     response.getWriter().write("로그인 실패. 서버 로그 확인 필요");
     log.info("소셜 로그인 실패",exception.getMessage());
   }
+
+
 }
+

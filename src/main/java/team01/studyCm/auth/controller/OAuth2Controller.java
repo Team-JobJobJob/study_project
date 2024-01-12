@@ -21,7 +21,6 @@ public class OAuth2Controller {
   private final OAuth2Service oAuth2UserService;
   private final ModelAndView modelAndView = new ModelAndView();
 
-
   @PostMapping("/oauth2/signup")
   public void updateUserInfo(HttpServletResponse response, @RequestParam String job, Principal principal) throws IOException {
     oAuth2UserService.updateOAuth2UserInfo(job,principal);
@@ -36,5 +35,5 @@ public class OAuth2Controller {
     return modelAndView;
   }
 
-
 }
+

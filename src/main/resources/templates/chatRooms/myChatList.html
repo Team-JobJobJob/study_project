@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <!-- Include any additional CSS styling here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div th:if="${chatRooms != null and chatRooms.size() > 0}">
+    <table>
+        <thead>
+        <tr>
+            <th>room name</th>
+            <th>description</th>
+            <th>member count</th>
+            <th>job</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="chatPage : ${chatRooms}">
+            <td th:text="${chatPage.chatName}"></td>
+            <td th:text="${chatPage.description}"></td>
+            <td th:text="${chatPage.memberCnt}"></td>
+            <td th:text="${job}"></td>
+            <td><button><a th:href="@{'modifyRoom/' + ${chatPage.chatId}}">수정</a></button></td>
+            <td><button th:onclick="'deleteForm(\'' + ${chatPage.chatId} + '\')'"><a>삭제</a></button></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${chatRooms == null  || chatRooms.size() == 0}">
+    <h1>사용자가 대화방을 만들지 않았습니다</h1>
+    <button type="button"><a th:href="'rooms/' + ${job}">이전으로</a></button>
+</div>
+
+<script th:inline="javascript">
+    function deleteForm(chatId) {
+
+        // Fetch API를 사용하여 JSON 데이터를 서버에 전송
+        fetch("deleteRoom/" + chatId, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                // if (!response.ok) {
+                //     throw new Error('Network response was not ok');
+                // }
+
+                if (response.redirected) {
+                    // Get the redirected URL from the headers
+                    const redirectedUrl = response.url;
+                    console.log('Redirected URL:', redirectedUrl);
+                    window.location.href = redirectedUrl;
+                }
+
+                return response.text();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+</script>
+
+</body>
+</html>
