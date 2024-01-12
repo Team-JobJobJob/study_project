@@ -16,6 +16,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.socket.WebSocketSession;
+import team01.studyCm.alarm.entity.Alarm;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.User;
@@ -44,6 +45,10 @@ public class Chat {
   @Column
   private String description;
 
+  @ManyToOne
+  @JoinColumn(name = "receiver_id")
+  private User receiver;
+
   @Column (name = "member_cnt")
   private Integer memberCnt;
 
@@ -52,6 +57,10 @@ public class Chat {
 
   @Column
   private String job;
+
+  @ManyToOne
+  @JoinColumn(name = "alarm")
+  private Alarm alarm;
 
   @CreatedDate
   @Column
