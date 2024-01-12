@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,10 +28,10 @@ import team01.studyCm.user.service.UserDetailService;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-public class TokenProvider {
+public class TokenProvider{
 
-  private static final String KEY_ROLES = "role";
   private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1h
+  private static final String BEARER = "Bearer ";
   private final UserDetailService userDetailService;
   private final UserRepository userRepository;
 
@@ -47,13 +48,11 @@ public class TokenProvider {
     Date now = new Date();
     Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
-    return Jwts.builder()
-        .setSubject("AccessToken")
-        .setIssuedAt(now)
-        .setExpiration(expiredDate)
-        .signWith(SignatureAlgorithm.HS512, this.secretKey)
-        .claim("email",email)
-        .compact();
+    return JWT.create()
+        .withSubject("AccessToken")
+        .withExpiresAt(expiredDate)
+        .withClaim("email", email)
+        .sign(Algorithm.HMAC512(secretKey));
 
   }
 
@@ -78,10 +77,6 @@ public class TokenProvider {
     }
   }
 
-  public Authentication getAuthentication(String jwt) {
-    UserDetails userDetails = this.userDetailService.loadUserByUsername(this.getUsername(jwt));
-    return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-  }
 
   private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
     response.setHeader(accessHeader, accessToken);
@@ -92,17 +87,15 @@ public class TokenProvider {
     Date now = new Date();
     Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
-    return Jwts.builder()
-        .setSubject("RefreshToken")
-        .setIssuedAt(now)
-        .setExpiration(expiredDate)
-        .signWith(SignatureAlgorithm.HS512, this.secretKey)
-        .compact();
+    return JWT.create()
+        .withSubject("RefreshToken")
+        .withExpiresAt(expiredDate)
+        .sign(Algorithm.HMAC512(secretKey));
   }
 
   public void updateRefreshToken(String email, String refreshToken) {
     userRepository.findByEmail(email)
-        .ifPresentOrElse(user -> user.updateRefreshToken(refreshToken),
+        .ifPresentOrElse(user -> user.setRefreshToken(refreshToken),
             () -> new Exception("일치하는 회원이 없습니다"));
   }
 
@@ -114,7 +107,8 @@ public class TokenProvider {
   public void sendAccessToken(HttpServletResponse response, String accessToken) {
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(accessHeader, accessToken);
-    response.setHeader(accessHeader, accessToken);
+
+    log.info("재발급 AccessToken {}",accessToken);
   }
 
   public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken,
@@ -122,21 +116,28 @@ public class TokenProvider {
     response.setStatus(HttpServletResponse.SC_OK);
     setAccessTokenHeader(response, accessToken);
     setRefreshTokenHeader(response, refreshToken);
+    response.setStatus(HttpStatus.OK.value());
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("application/json;charset=UTF-8");
 
+    log.info("Access Token : " + accessToken);
+    log.info("Refresh Token : " + refreshToken);
+
+    log.info("Access Token, Refresh Token 헤더 및 쿠키 설정 완료");
   }
 
   // 헤더에서 RefreshToken추출 ->  헤더 가져온 후 Bearer삭제
   public Optional<String> extractRefreshToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(refreshHeader))
-        .filter(refreshToken -> refreshToken.startsWith("Bearer"))
-        .map(refreshToken -> refreshToken.replace("Bearer", ""));
+        .filter(refreshToken -> refreshToken.startsWith(BEARER))
+        .map(refreshToken -> refreshToken.replace(BEARER, ""));
   }
 
   //헤더에서 AccessToken추출
   public Optional<String> extractAccessToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(accessHeader))
-        .filter(accessToken -> accessToken.startsWith("Bearer"))
-        .map(accessToken -> accessToken.replace("Bearer",""));
+        .filter(accessToken -> accessToken.startsWith(BEARER))
+        .map(accessToken -> accessToken.replace(BEARER,""));
   }
 
   public boolean isTokenValid(String token) {
@@ -149,7 +150,7 @@ public class TokenProvider {
     }
   }
 
-  //AccessToken에서 email추출
+
   public Optional<String> extractEmail(String accessToken) {
     try {
       return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))

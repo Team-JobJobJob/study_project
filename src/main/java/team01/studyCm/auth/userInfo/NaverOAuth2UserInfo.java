@@ -9,7 +9,17 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     super(attributes);
   }
 
-  //response key로 한 번 감싸져 있어 get("response")로 꺼낸 뒤 사용할 정보 key로 사용
+  @Override
+  public String getEmail() {
+    Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+    if (response == null) {
+      return null;
+    }
+
+    return (String) response.get("email");
+  }
+
   @Override
   public String getId() {
     Map<String, Object> response = (Map<String, Object>) attributes.get("response");
@@ -29,5 +39,16 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     }
 
     return (String) response.get("name");
+  }
+
+  @Override
+  public String getPhone() {
+    Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+    if (response == null) {
+      return null;
+    }
+
+    return (String) response.get("mobile");
   }
 }
