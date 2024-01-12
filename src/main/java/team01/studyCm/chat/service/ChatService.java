@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
+import team01.studyCm.alarm.service.AlarmService;
 import team01.studyCm.auth.service.CustomOAuth2UserService;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
@@ -40,6 +41,7 @@ public class ChatService {
   private final UserRepository userRepository;
   private final CustomOAuth2UserService customOAuth2UserService;
   private final UserService userService;
+  private final AlarmService alarmService;
 
 
 //  public void createRoom(ChatDto chatDto, User loggedInUser) {

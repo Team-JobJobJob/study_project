@@ -1,9 +1,12 @@
 package team01.studyCm.chat.dto;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import team01.studyCm.user.entity.User;
 
 @Getter
 @Setter
@@ -22,6 +25,10 @@ public class MessageDto {
     private Long chatId; // 방 번호
     private Long userId; // 유저 번호
     private String sender; // 채팅을 보낸 사람
+    private Long receiverId;
+
+
+
     private String contents; // 메시지
     private String time; // 채팅 발송 시간
 
