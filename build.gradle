@@ -23,7 +23,6 @@ repositories {
 
 dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -32,7 +31,6 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	implementation 'com.auth0:java-jwt:4.2.1'
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
-
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -48,8 +46,6 @@ dependencies {
 	implementation group: 'org.webjars.bower', name:'axios', version:'0.17.1'
 	implementation 'com.google.code.gson:gson:2.9.0'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
-
-
 }
 
 tasks.named('test') {
