@@ -13,6 +13,7 @@ import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.repository.UserRepository;
+
 import team01.studyCm.util.EnumUtility;
 
 @RequiredArgsConstructor
@@ -31,7 +32,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
       CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
       String email = oAuth2User.getEmail();
 
-      //처음 로그인하는 경우 GUEST로 role 설정, 추가 정보 입력받도록 redirect
       if(oAuth2User.getRole().equals(Role.GUEST)){
         String accessToken = tokenProvider.createAccessToken(oAuth2User.getEmail());
         response.addHeader("Authorization","Bearer "+accessToken);

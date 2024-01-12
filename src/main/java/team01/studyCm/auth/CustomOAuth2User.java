@@ -34,12 +34,10 @@ public class CustomOAuth2User extends DefaultOAuth2User {
    *                         {@link #getAttributes()}
    */
   public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities,
-                          Map<String, Object> attributes, String nameAttributeKey,
-                          String email, Long userId, String job, Role role, String phoneNumber) {
+      Map<String, Object> attributes, String nameAttributeKey,
+      String email, Long userId, String job, Role role, String phoneNumber) {
     super(authorities, attributes, nameAttributeKey);
 
-    //super -> 부모객체 default생성
-    //email, role 추가 파라미터로 주입
     this.userId = userId;
     this.job = job;
     this.email = email;
@@ -54,5 +52,5 @@ public class CustomOAuth2User extends DefaultOAuth2User {
     return modifiedAttributes;
   }
 
-
 }
+

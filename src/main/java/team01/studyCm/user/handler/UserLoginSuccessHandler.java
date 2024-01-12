@@ -19,6 +19,7 @@ import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
+
 import team01.studyCm.util.CookieUtility;
 
 @RequiredArgsConstructor
@@ -39,10 +40,12 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
       tokenProvider.sendAccessAndRefreshToken(response, accessToken, refreshToken); // 응답 헤더에 AccessToken, RefreshToken 실어서 응답
 
       userRepository.findByEmail(email)
-              .ifPresent(user -> {
-                user.setRefreshToken(refreshToken);
-                userRepository.saveAndFlush(user);
-              });
+
+          .ifPresent(user -> {
+            user.setRefreshToken(refreshToken);
+            userRepository.saveAndFlush(user);
+          });
+
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
       log.info("로그인에 성공하였습니다. 이메일 : {}", email);
@@ -55,9 +58,11 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
       User user = userRepository.findByEmail(userEmail)
           .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자"));
 
-      //일단은 쿠키에 담는다
+     
+
       UserDto userDto = UserDto.toUserDto(user);
       CookieUtility.setUserCookie(response, userDto);
+
 
 //      TokenDto tokenDto = TokenDto.builder()
 //          .accessToken(accessToken)
@@ -75,12 +80,6 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
 
       String job = user.getJob();
       response.sendRedirect("/chat/rooms/" + job);
-      // job을 불러올 수 있는 방법
-//      if (!response.isCommitted()){
-//        response.sendRedirect("/chat/rooms/"+job);
-//      }else{
-//        log.info("response.isCommitted");
-//      }
 
     }
     catch (Exception e){

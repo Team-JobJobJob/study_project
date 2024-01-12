@@ -20,7 +20,6 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     return (String) response.get("email");
   }
 
-  //response key로 한 번 감싸져 있어 get("response")로 꺼낸 뒤 사용할 정보 key로 사용
   @Override
   public String getId() {
     Map<String, Object> response = (Map<String, Object>) attributes.get("response");

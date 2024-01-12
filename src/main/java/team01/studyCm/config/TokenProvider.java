@@ -150,7 +150,7 @@ public class TokenProvider{
     }
   }
 
-  //AccessToken에서 email추출
+
   public Optional<String> extractEmail(String accessToken) {
     try {
       return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))

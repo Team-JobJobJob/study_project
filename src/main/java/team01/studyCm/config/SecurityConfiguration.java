@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -31,7 +30,6 @@ import team01.studyCm.user.service.UserDetailService;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-  //private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final CustomOAuth2UserService customOAuth2UserService;
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
@@ -101,7 +99,6 @@ public class SecurityConfiguration {
     authenticationProcessingFilter.setAuthenticationFailureHandler(userLoginFailureHandler());
     return authenticationProcessingFilter;
   }
-
 
 
 }
