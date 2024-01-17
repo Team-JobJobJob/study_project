@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <title>Websocket ChatRoom</title>
     <!-- Required meta tags -->
@@ -15,6 +15,9 @@
     </style>
 </head>
 <body>
+<div>
+    <button type="button"><a th:href="@{'chat/rooms/' + ${job}}">돌아가기</a></button>
+</div>
 <div class="container" id="app" v-cloak>
     <div>
         <h2>{{room.name}}</h2>
@@ -29,8 +32,8 @@
         </div>
     </div>
     <ul class="list-group">
-        <li class="list-group-item" v-for="contents in contents">
-            {{message.sender}} - {{message.contents}}
+        <li class="list-group-item" v-for="message in messages">
+            {{message.sender}} - {{message.message}}
         </li>
     </ul>
     <div></div>
@@ -43,7 +46,7 @@
 <script>
     //alert(document.title);
     // websocket & stomp initialize
-    var sock = new SockJS("/ws-stomp");
+    var sock = new SockJS("/ws/chat");
     var ws = Stomp.over(sock);
     var reconnect = 0;
     // vue.js
@@ -53,7 +56,7 @@
             chatId: '',
             room: {},
             sender: '',
-            contents: '',
+            message: '',
             messages: []
         },
         created() {
@@ -66,11 +69,11 @@
                 axios.get('/chat/room/'+this.chatId).then(response => { this.room = response.data; });
             },
             sendMessage: function() {
-                ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', chatId:this.chatId, sender:this.sender, contents:this.contents}));
-                this.contents = '';
+                ws.send("/app/chat/message", {}, JSON.stringify({type:'TALK', chatId:this.chatId, sender:this.sender, message:this.message}));
+                this.message = '';
             },
             recvMessage: function(recv) {
-                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"contents":recv.contents})
+                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
             }
         }
     });
@@ -78,16 +81,16 @@
     function connect() {
         // pub/sub event
         ws.connect({}, function(frame) {
-            ws.subscribe("/sub/chat/room/"+vm.$data.chatId, function(message) {
+            ws.subscribe("/topic/chat/room/"+vm.$data.chatId, function(message) {
                 var recv = JSON.parse(message.body);
                 vm.recvMessage(recv);
             });
-            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', chatId:vm.$data.chatId, sender:vm.$data.sender}));
+            ws.send("/app/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.chatId, sender:vm.$data.sender}));
         }, function(error) {
             if(reconnect++ <= 5) {
                 setTimeout(function() {
                     console.log("connection reconnect");
-                    sock = new SockJS("/ws-stomp");
+                    sock = new SockJS("/ws/chat");
                     ws = Stomp.over(sock);
                     connect();
                 },10*1000);

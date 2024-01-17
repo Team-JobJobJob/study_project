@@ -174,4 +174,10 @@ public class ChatController {
     return "chatRooms/ChatRoomList";
   }
 
+  @GetMapping("room/enter/{chatId}")
+  public String roomDetail (Model model, @PathVariable String chatId) {
+    model.addAttribute("chatId", chatId);
+    return "chatRooms/chatRoom";
+  }
+
 }

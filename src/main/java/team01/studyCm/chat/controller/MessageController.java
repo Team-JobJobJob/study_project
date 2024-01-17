@@ -8,10 +8,14 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import team01.studyCm.chat.dto.MessageCreateRequestDto;
 import team01.studyCm.chat.dto.MessageDto;
+import team01.studyCm.chat.entity.Chat;
+import team01.studyCm.chat.repository.ChatRepository;
 import team01.studyCm.chat.service.ChatService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,12 +26,28 @@ public class MessageController {
 
     @Autowired
     ChatService chatService;
+
+//    @MessageMapping(value = "/chat/enter")
+//    public void enter(MessageDto messageDto){
+//        if (MessageDto.MessageType.ENTER.equals(messageDto.getType())) {
+//            messageDto.setContents(messageDto.getSender() + "님이 채팅방에 참여하였습니다.");
+//        }
+//        messagingTemplate.convertAndSend("/sub/chat/room/" + messageDto.getChatId(), messageDto);
+//
+//    }
+
+
     @MessageMapping("/chat/message")
     public void message(MessageDto messageDto) {
-        if (MessageDto.MessageType.ENTER.equals(messageDto.getType()))
-            messageDto.setContents(messageDto.getSender() + " 님이 입장하셨습니다.");
+        if (MessageDto.MessageType.ENTER.equals(messageDto.getType())) {
+            messageDto.setContents(messageDto.getSender() + "님이 채팅방에 참여하였습니다.");
+        }
         messagingTemplate.convertAndSend("/sub/chat/room/" + messageDto.getChatId(), messageDto);
 
+        // DB에 채팅내용 저장
+//        Chat chat= crr.findByChatId(messageDto.getChatId());
+//        MessageCreateRequestDto chatMessageSaveDTO = new MessageCreateRequestDto(messageDto.getChatId(),messageDto.getSender(), messageDto.getContents());
+//        cr.save(Message.toMessage(chatMessageSaveDTO,chat));
     }
 
     // 채팅에 참여한 유저 리스트 반환

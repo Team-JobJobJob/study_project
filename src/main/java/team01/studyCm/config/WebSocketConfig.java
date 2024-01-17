@@ -14,16 +14,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final AlarmHandler alarmHandler;
     @Override
-    public void configureMessageBroker (MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/sub");
-        config.setApplicationDestinationPrefixes("/pub");
+    public void configureMessageBroker (MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/sub");
+        registry.setApplicationDestinationPrefixes("/pub");
     }
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // stomp 접속 주소 url : /ws-stomp
-        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*")
+        registry.addEndpoint("/stomp/chat")
+                .setAllowedOriginPatterns("http://localhost:8080")
                 .withSockJS();
     }
 
