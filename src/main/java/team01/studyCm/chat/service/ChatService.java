@@ -1,30 +1,21 @@
 package team01.studyCm.chat.service;
 
-import static team01.studyCm.user.entity.status.SocialType.GOOGLE;
-import static team01.studyCm.user.entity.status.SocialType.NAVER;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import team01.studyCm.alarm.service.AlarmService;
 import team01.studyCm.auth.service.CustomOAuth2UserService;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
+import team01.studyCm.chat.dto.MessageDto;
 import team01.studyCm.chat.entity.Chat;
-import team01.studyCm.chat.exception.UnauthorizedAccessException;
 import team01.studyCm.chat.repository.ChatRepository;
-import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.User;
-import team01.studyCm.user.entity.status.SocialType;
 import team01.studyCm.user.repository.UserRepository;
 
 import java.security.Principal;
@@ -38,11 +29,11 @@ import team01.studyCm.user.service.UserService;
 public class ChatService {
 
   private final ChatRepository chatRepository;
+
   private final UserRepository userRepository;
   private final CustomOAuth2UserService customOAuth2UserService;
   private final UserService userService;
   private final AlarmService alarmService;
-
 
 //  public void createRoom(ChatDto chatDto, User loggedInUser) {
 //
@@ -218,6 +209,30 @@ public class ChatService {
             .job(chat.getJob())
         .build();
   }
+
+//  public List<MessageDto> findAllMessageByChatId(Long chatId) {
+//    List<Message> messages =  messageRepository.findAllMessageByChatId(chatId);
+//    List<MessageDto> ret = new ArrayList<>();
+//    for (Message message : messages) {
+//      ret.add(toMessageDto(message));
+//    }
+//    return ret;
+//  }
+
+//  public static MessageDto toMessageDto(Message message){
+//    MessageDto messageDto = new MessageDto();
+//
+//    messageDto.setId(message.getId());
+//
+//    messageDto.setChatId(message.getChat().getChatId());
+//    messageDto.setUserId(message.getUser().getUser_id());
+//
+//    messageDto.setSender(message.getSender());
+//    messageDto.setContents(message.getContents());
+//
+//    return messageDto;
+//
+//  }
 
 
 

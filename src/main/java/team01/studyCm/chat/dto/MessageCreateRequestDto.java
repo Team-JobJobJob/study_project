@@ -1,10 +1,26 @@
 package team01.studyCm.chat.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageCreateRequestDto {
 
+  private Long chatId;
   private Long userId;
   private Long receiverId;
 
-  private String message;
+  private String sender;
+  private String contents;
 
+  public MessageCreateRequestDto(Long chatId, String sender, String contents) {
+    this.chatId = chatId;
+    this.sender = sender;
+    this.contents = contents;
+  }
 }
