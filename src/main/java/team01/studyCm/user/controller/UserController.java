@@ -1,13 +1,16 @@
 package team01.studyCm.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
@@ -16,6 +19,7 @@ import team01.studyCm.user.service.UserService;
 import team01.studyCm.util.CookieUtility;
 
 import java.security.Principal;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -91,29 +95,44 @@ public class UserController {
     }
 
     @GetMapping("users/modify")
-    public String modify(Model model, Principal principal, @AuthenticationPrincipal
-        PrincipalDetails details) {
+    public String modify(HttpServletRequest request,  Model model, Authentication authentication) {
         String email;
-        if (principal != null){
-            email = principal.getName();
-        }else{
-            email = details.getEmail();
+        if(authentication != null) {
+            CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+            email = oAuth2User.getJob();
+        }
+        else{
+            Map<String, String> map = CookieUtility.getCookie(request);
+            email = map.get("userEmail");
         }
 
+        UserDto userDto = userService.findByEmail(email);
+
+        model.addAttribute("user", userDto);
         model.addAttribute("email", email);
         return "users/modify";
     }
 
     @PostMapping("users/modify")
-    public String modify(Principal principal, @RequestBody UserInfoDto InfoDto) {
+    public String modifyPost(HttpServletRequest request, Authentication authentication, @RequestBody UserInfoDto InfoDto) {
+        String email;
 
-        boolean modifyOutcome = userService.modify(principal, InfoDto);
-
-        if(!modifyOutcome) {
-            return "users/modify";
+        if(authentication != null) {
+            CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+            email = oAuth2User.getEmail();
+        }
+        else{
+            Map<String, String> map = CookieUtility.getCookie(request);
+            email = map.get("userEmail");
         }
 
-        return "users/mypage";
+        boolean modifyOutcome = userService.modify(email, InfoDto);
+
+        if(!modifyOutcome) {
+            return "redirect:/chat/rooms/" + InfoDto.getJob();
+        }
+
+        return "redirect:/chat/rooms/" + InfoDto.getJob();
     }
 
     @GetMapping("users/mypage/{id}")
