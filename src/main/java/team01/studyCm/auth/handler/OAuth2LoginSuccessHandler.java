@@ -39,7 +39,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
       }else{
         loginSuccess(response, oAuth2User);
         String job = oAuth2User.getJob();
-//        String jobUrl = EnumUtility.jobEnumValueToName(job);
         response.sendRedirect("/chat/rooms/" + job);
       }
     }catch (Exception e){
