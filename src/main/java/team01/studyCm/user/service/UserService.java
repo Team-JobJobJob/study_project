@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import team01.studyCm.auth.service.CustomOAuth2UserService;
+import team01.studyCm.exception.CustomErrorCode;
+import team01.studyCm.exception.CustomException;
 import team01.studyCm.user.dto.LoginCredDto;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
@@ -63,7 +65,7 @@ public class UserService {
     log.info("User email : {}", email);
 
     User user= userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 회원"));
+        .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_EMAIL));
 
 
     return user;
@@ -74,7 +76,7 @@ public class UserService {
     log.info("User email : {}", email);
 
     User user= userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("존재하지 않는 회원"));
+            .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_EMAIL));
 
 
     return user;

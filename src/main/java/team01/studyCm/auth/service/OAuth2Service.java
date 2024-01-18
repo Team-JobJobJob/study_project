@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
+import team01.studyCm.exception.CustomErrorCode;
+import team01.studyCm.exception.CustomException;
 import team01.studyCm.user.entity.User;
 import team01.studyCm.user.entity.status.Role;
 import team01.studyCm.user.entity.status.SocialType;
@@ -32,7 +34,7 @@ public class OAuth2Service {
     User user = userRepository.findByEmail(email).
         orElseThrow(() -> {
           log.error("User not found for email: {}", email);
-          return new RuntimeException("일치하지 않는 고객");
+          return new CustomException(CustomErrorCode.NOT_FOUND_EMAIL);
         });
 
     log.debug("Updating user information: {}", user);
