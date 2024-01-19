@@ -24,7 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // stomp 접속 주소 url : /ws-stomp
         registry.addEndpoint("/stomp/chat")
-                .setAllowedOriginPatterns("http://localhost:8080")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 

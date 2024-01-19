@@ -1,5 +1,6 @@
 package team01.studyCm.chat.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,13 @@ public class ChatService {
   private final UserService userService;
   private final AlarmService alarmService;
 
+  private Map<Long, Chat> chatRoomMap;
+
+  @PostConstruct
+  private void initializeChatRoomMap() {
+    this.chatRoomMap = new LinkedHashMap<>();
+  }
+
 //  public void createRoom(ChatDto chatDto, User loggedInUser) {
 //
 //    loggedInUser = // 로그인한 사용자 정보를 가져오거나 생성
@@ -66,6 +74,9 @@ public class ChatService {
         .build();
 
     chatDto.setJob(job);
+
+    this.chatRoomMap.put(chat.getChatId(), chat);
+
     // ChatRoom 엔티티 저장
     chatRepository.save(chat);
   }
@@ -87,6 +98,8 @@ public class ChatService {
             .job(job)
             .user(user)
             .build();
+
+    this.chatRoomMap.put(chat.getChatId(), chat);
 
     chatDto.setJob(job);
     // ChatRoom 엔티티 저장
@@ -233,6 +246,62 @@ public class ChatService {
 //    return messageDto;
 //
 //  }
+
+  // 채팅 관련 메소드
+
+  public List<String> getAllUsersInRoom(Long chatId) {
+    return new ArrayList<>(getChatById(chatId).getUserList().values());
+  }
+
+  public void incrementUserCount(Long chatId) {
+    updateUserCount(chatId, 1);
+  }
+
+  public void decrementUserCount(Long chatId) {
+    updateUserCount(chatId, -1);
+  }
+
+  public void removeUserFromRoom(Long chatId, Long userId) {
+    Chat chat = getChatById(chatId);
+    chat.getUserList().remove(userId);
+  }
+
+  private void updateUserCount(Long chatId, int count) {
+    Chat chat = getChatById(chatId);
+    chat.setUserCnt(chat.getUserCnt() + count);
+  }
+
+  public Chat getChatById(Long chatId) {
+    return chatRepository.findByChatId(chatId);
+  }
+
+  public Long addUserToRoom(Long chatId, String userName, Principal principal,String email) {
+    Chat chat = getChatById(chatId);
+
+    if (principal == null) {
+      User user = userService.getUserByEmail(email);
+      Long userId = user.getUser_id();
+
+      chat.getUserList().put(userId, userName);
+
+      return userId;
+
+    } else {
+      User user = userService.getUser(principal);
+      Long userId = user.getUser_id();
+
+      chat.getUserList().put(userId, userName);
+
+      return userId;
+
+    }
+
+  }
+
+  public String getUserName(Long chatId, Long userId) {
+    Chat chat = getChatById(chatId);
+    return chat.getUserList().get(userId);
+  }
 
 
 

@@ -47,7 +47,16 @@
     //alert(document.title);
     // websocket & stomp initialize
     var sock = new SockJS("/stomp/chat");
+    var token = 'abcdefg1234';
+
+    var headers = {
+        'accessHeader' : token,
+    };
+
     var ws = Stomp.over(sock);
+    ws.connect(headers, (frame) => {
+        console.log('Connected:', frame);
+    })
     var reconnect = 0;
     // vue.js
     var vm = new Vue({
