@@ -134,7 +134,7 @@
         <td th:text="${chatPage.description}"></td>
         <td th:text="${chatPage.memberCnt}"></td>
         <td>
-          <a th:href="@{'/chat/' + ${chatPage.chatId}}" class="btn btn-primary">입장</a>
+          <a th:href="@{'/chat/room/enter/' + ${chatPage.chatId}}" class="btn btn-primary">입장</a>
         </td>
       </tr>
       </tbody>

@@ -22,14 +22,16 @@ public class MessageDto {
     }
 
     private MessageType type; // 메시지 타입
+    private Long id;
     private Long chatId; // 방 번호
     private Long userId; // 유저 번호
     private String sender; // 채팅을 보낸 사람
     private Long receiverId;
 
 
-
     private String contents; // 메시지
-    private String time; // 채팅 발송 시간
+    private String createdAt; // 채팅 발송 시간
+
+
 
 }
