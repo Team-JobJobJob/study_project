@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>To Do List 작성</title>
+</head>
+<body>
+<!--onsubmit="submitForm(event)"-->
+<form id="addForm" th:action="@{'/todoList/add/' + ${chatId}}" th:method="post">
+    <h2>To Do List 작성</h2>
+    <div>
+        <input  class="hidden" type="checkbox" id="finish" name="finish" th:value=false>
+        <label>할일 적기</label>
+        <input  type="text" id="contents" name="contents" required>
+        <input  class="hidden" type="text" id="email" name="email" th:value="${email}">
+        <input  class="hidden" type="text" id="chatId" name="chatId" th:value="${chatId}">
+    </div>
+
+    <h1></h1>
+
+    <button>
+        <a th:href="@{'/todoList'}">취소</a>
+    </button>
+    <button
+            type="submit"> 작성
+    </button>
+
+</form>
+
+</body>
+
+</html>

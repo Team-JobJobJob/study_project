@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface TodoRepository extends JpaRepository<TodoList, Long> {
-    Optional<TodoList> findByEmailAndChatId(String email, Long chatId);
-    List<TodoList> findByChatId(Long chatId);
+    Optional<TodoList> findByEmailAndContents(String email, String content);
+    List<TodoList> getUniqueContentsByChatId(Long chatId);
+    List<TodoList> getUniqueEmailsByChatId(Long chatId);
+    List<TodoList> findByEmailAndChatId(String email, Long chatId);
 }
