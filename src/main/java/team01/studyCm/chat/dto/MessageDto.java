@@ -2,16 +2,14 @@ package team01.studyCm.chat.dto;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import team01.studyCm.user.entity.User;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class MessageDto {
     // 메시지  타입 : 입장, 채팅
     // 메시지 타입에 따라서 동작하는 구조가 달라진다.

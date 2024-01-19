@@ -175,7 +175,7 @@ public class ChatController {
   }
 
   @GetMapping("room/enter/{chatId}")
-  public String roomDetail (Model model, @PathVariable String chatId) {
+  public String roomDetail (Model model, @PathVariable Long chatId) {
     model.addAttribute("chatId", chatId);
     return "chatRooms/chatRoom";
   }

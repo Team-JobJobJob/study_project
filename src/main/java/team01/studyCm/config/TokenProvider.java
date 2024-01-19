@@ -164,4 +164,19 @@ public class TokenProvider{
       return Optional.empty();
     }
   }
+
+  // 채팅 관련 메소드
+  public Long getUserIdFromAccessToken (String token) {
+    return getUserId(token, secretKey);
+  }
+
+  private Long getUserId(String token, String signingKey) {
+    Claims claims = Jwts.parser()
+            .setSigningKey(signingKey)
+            .parseClaimsJws(token)
+            .getBody();
+
+    return Long.parseLong(claims.getSubject());
+  }
+
 }

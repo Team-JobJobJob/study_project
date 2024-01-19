@@ -46,6 +46,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(requests -> requests
             .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             .anyRequest().authenticated()
+
         )
         .oauth2Login(oauth2 -> oauth2
             .successHandler(oAuth2LoginSuccessHandler)

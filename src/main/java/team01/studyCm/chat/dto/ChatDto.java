@@ -30,6 +30,8 @@ public class ChatDto {
   private String email;
   private String job;
 
+  private Map<Long, String> userlist = new HashMap<>();
+
   public ChatDto(User loggedInUser) {
     this.email = loggedInUser.getEmail();
     this.job = loggedInUser.getJob();
