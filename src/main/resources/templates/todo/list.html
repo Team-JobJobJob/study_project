@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅방 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 700px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px; /* Add some space below the table */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        header {
+            background-color: #4CAF50; /* Bright green color */
+            color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: flex-end; /* Align content to the right */
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #ffd54f; /* Light yellow color on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+<form th:method="get">
+    <h2> To Do List </h2>
+    <div th:if="${todoList != null and todoList.size() > 0}">
+        <div class="container">
+            <ul class="pagination pagination-primary m-4" th:each="x : ${todoList}">
+
+                <li>
+<!--                    <button id="finish" name="finish" th:checked="${x.finish}" th:onclick="'checkForm( \'' + ${x.chatId} + '\', \'' + ${x.finish} + '\', \'' + ${x.contents} + '\')'">Click me</button>-->
+                    <input th:attr="onchange='checkForm( \'' + ${x.chatId} + '\', \'' + ${x.finish} + '\', \'' + ${x.contents} + '\')'" type="checkbox" id="finish" name="finish" th:checked="${x.finish}">
+                    <a th:text="${x.contents}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:if="${todoList == null  || todoList.size() == 0}">
+        <h1>todo 리스트 없음</h1>
+    </div>
+</form>
+
+</body>
+
+<script th:inline="javascript">
+    function checkForm(chatId, finish, contents) {
+
+        const jsonData = {"finish": finish, "contents" : contents};
+        const jsonString = JSON.stringify(jsonData);
+
+        console.log(jsonData);
+        console.log(jsonString);
+
+        // Fetch API를 사용하여 JSON 데이터를 서버에 전송
+        fetch("/todoList/check/" + chatId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonString
+        })
+            .then(response => {
+
+                if (response.redirected) {
+                    // Get the redirected URL from the headers
+                    const redirectedUrl = response.url;
+                    console.log('Redirected URL:', redirectedUrl);
+                    window.location.href = redirectedUrl;
+                }
+
+                return response.text();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+</script>
+
+</html>

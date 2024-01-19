@@ -57,15 +57,15 @@
 </head>
 <body>
 
-  <form th:action="@{'/users/modify/' + ${userId}}" th:method="post">
+  <form id="modifyForm" onsubmit="submitForm(event)" th:action="@{'/users/modify'}" th:method="post">
     <h2>회원 정보 수정</h2>
     <div>
       <label for = "userName">회원 이름</label>
-      <input type="text" id="userName" name="userName">
+      <input type="text" id="userName" name="userName" th:value="${user.userName}" required>
     </div>
     <div>
       <label for = "password">회원 비밀번호</label>
-      <input type="text" id="password" name="password">
+      <input type="text" id="password" name="password" placeholder="*******">
     </div>
     <div>
       <label for = "confirmPassword">회원 비밀번호 확인</label>
@@ -73,31 +73,31 @@
     </div>
     <div>
       <label for = "phone">전화 번호</label>
-      <input type="text" id="phone" name="phone">
+      <input type="text" id="phone" name="phone" th:value="${user.phone}" required>
     </div>
     <div>
       <label for = "job">희망 직무</label>
-      <select id="job" name="job">
-        <option value="IT/인터넷 전체">IT/인터넷 전체</option>
-        <option value="웹개발">웹개발</option>
-        <option value="응용프로그램개발">응용프로그램개발</option>
-        <option value="ERP/시스템개발/설계">ERP/시스템개발/설계</option>
-        <option value="네트워크/서버/보안">네트워크/서버/보안</option>
-        <option value="DBA/데이터베이스">DBA/데이터베이스</option>
-        <option value="콘텐츠/사이트운영">콘텐츠/사이트운영</option>
-        <option value="웹기획/PM/웹마케팅">웹기획/PM/웹마케팅</option>
-        <option value="HTML/퍼블리싱/UI개발">HTML/퍼블리싱/UI개발</option>
-        <option value="QA/테스트/검증">QA/테스트/검증</option>
-        <option value="게임">게임</option>
-        <option value="동영상제작/편집">동영상제작/편집</option>
-        <option value="빅데이터/AI">빅데이터/AI</option>
+      <select id="job" name="job" th:value="${user.job}" required>
+        <option value="IT">IT/인터넷 전체</option>
+        <option value="WEBDEV">웹개발</option>
+        <option value="APPDEV">응용프로그램개발</option>
+        <option value="ERP">ERP/시스템개발/설계</option>
+        <option value="NETWORK">네트워크/서버/보안</option>
+        <option value="DBA">DBA/데이터베이스</option>
+        <option value="SITE">콘텐츠/사이트운영</option>
+        <option value="WEBMANAGE">웹기획/PM/웹마케팅</option>
+        <option value="FRONTEND">HTML/퍼블리싱/UI개발</option>
+        <option value="QA">QA/테스트/검증</option>
+        <option value="GAME">게임</option>
+        <option value="VIDEO">동영상제작/편집</option>
+        <option value="AI">빅데이터/AI</option>
       </select>
     </div>
 
     <h1></h1>
 
         <button>
-          <a href="/users/mypage">취소</a>
+          <a th:href="@{'/chat/rooms/' + ${user.job}}">취소</a>
         </button>
         <button
             type="submit"> 회원 정보 수정
@@ -105,4 +105,53 @@
 
   </form>
 </body>
+
+<script>
+  function submitForm(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('modifyForm');
+    const formData = new FormData(form);
+    const jsonData = {};
+
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+
+    // Get the selected value from the job select element
+    const selectedJob = document.getElementById('job').value;
+
+    // Update the form action attribute with the selected job value
+    form.action = `/users/modify`;
+
+    const jsonString = JSON.stringify(jsonData);
+
+    // 유저를 저장하는 리퀘스트
+    fetch(`/users/modify`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: jsonString
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+
+              if (response.redirected) {
+                // Get the redirected URL from the headers
+                const redirectedUrl = response.url;
+                console.log('Redirected URL:', redirectedUrl);
+                window.location.href = redirectedUrl;
+              }
+
+              return response.text();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  }
+</script>
+
 </html>

@@ -32,20 +32,20 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final CustomOAuth2UserService customOAuth2UserService;
 
-
-  public boolean modify(Principal principal, UserInfoDto userInfoDto) {
+  public boolean modify(String email, UserInfoDto userInfoDto) {
     String phone = userInfoDto.getPhone();
     String userName = userInfoDto.getUserName();
     String job = userInfoDto.getJob();
     String password = userInfoDto.getPassword();
 
-    User user = getUser(principal);
+    User user = getUserByEmail(email);
     user.setPhone(phone);
     user.setUserName(userName);
     user.setJob(job);
-    user.setPassword(password);
-
-    user.passwordEncode(passwordEncoder);
+    if(!password.equals("")) {
+      user.setPassword(password);
+      user.passwordEncode(passwordEncoder);
+    }
 
     userRepository.save(user);
 
@@ -108,6 +108,15 @@ public class UserService {
 
   public UserDto findById(Long userId) {
     Optional<User> optionalUser = userRepository.findById(userId);
+    if(optionalUser.isPresent()) {
+      return UserDto.toUserDto(optionalUser.get());
+    } else {
+      return null;
+    }
+  }
+
+  public UserDto findByEmail(String email) {
+    Optional<User> optionalUser = userRepository.findByEmail(email);
     if(optionalUser.isPresent()) {
       return UserDto.toUserDto(optionalUser.get());
     } else {
