@@ -34,6 +34,16 @@ public class CookieUtility {
 //        response.addCookie(user_id);
     }
 
+    public void setJWT(HttpServletResponse response, String jwt) {
+        Cookie userJWT = new Cookie("user_jwt", jwt);
+
+        userJWT.setPath("/");
+
+        userJWT.setMaxAge(24 * 60 * 60);
+
+        response.addCookie(userJWT);
+    }
+
     public Map<String, String> getCookie(HttpServletRequest request) {
         // Get all cookies from the request
         Cookie[] cookies = request.getCookies();
@@ -49,6 +59,9 @@ public class CookieUtility {
                 }
                 if ("user_job".equals(cookie.getName())) {
                     map.put("userJob", cookie.getValue());
+                }
+                if ("user_jwt".equals(cookie.getName())) {
+                    map.put("userJwt", cookie.getValue());
                 }
             }
         }

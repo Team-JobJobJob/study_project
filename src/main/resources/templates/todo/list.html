@@ -107,6 +107,9 @@
 <body>
 
 <form th:method="get">
+    <div>
+        <button type="button"><a th:href="@{'/chat/room/enter/' + ${chatId}}">돌아가기</a></button>
+    </div>
     <h2> To Do List </h2>
     <div th:if="${todoList != null and todoList.size() > 0}">
         <div class="container">

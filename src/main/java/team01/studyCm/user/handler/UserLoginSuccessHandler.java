@@ -62,6 +62,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
 
       UserDto userDto = UserDto.toUserDto(user);
       CookieUtility.setUserCookie(response, userDto);
+      CookieUtility.setJWT(response, accessToken);
 
 
 //      TokenDto tokenDto = TokenDto.builder()

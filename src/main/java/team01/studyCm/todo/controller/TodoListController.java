@@ -50,6 +50,7 @@ public class TodoListController {
         }
 
         model.addAttribute("todoList", todoListService.findWithEmailAndChatId(chatId, email));
+        model.addAttribute("chatId", chatId);
         return "todo/list";
     }
 

@@ -17,6 +17,8 @@
 <body>
 <div>
     <button type="button"><a th:href="@{'chat/rooms/' + ${job}}">돌아가기</a></button>
+    <button type="button"><a th:href="@{'/todoList/' + ${chatId}}">Todo 리스트</a></button>
+    <button type="button"><a th:href="@{'/todoList/add/' + ${chatId}}">Todo 리스트 생성</a></button>
 </div>
 <div class="container" id="app" v-cloak>
     <div>
