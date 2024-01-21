@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import team01.studyCm.config.TokenDto;
 import team01.studyCm.config.TokenProvider;
 import team01.studyCm.user.dto.LoginCredDto;
@@ -31,7 +34,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-      Authentication authentication) throws IOException {
+                                      Authentication authentication) throws IOException {
     try {
       String email = extractUsername(authentication); // 인증 정보에서 Username(email) 추출
       String accessToken = tokenProvider.createAccessToken(email);
@@ -64,6 +67,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
       CookieUtility.setUserCookie(response, userDto);
       CookieUtility.setJWT(response, accessToken);
 
+      log.info(accessToken);
 
 //      TokenDto tokenDto = TokenDto.builder()
 //          .accessToken(accessToken)
@@ -80,7 +84,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
 //      response.getWriter().write(tokenJson);
 
       String job = user.getJob();
-      response.sendRedirect("/chat/rooms/" + job);
+      response.sendRedirect("/chat/rooms/" + job + "-" + accessToken);
 
     }
     catch (Exception e){
