@@ -60,7 +60,6 @@ public class UserController {
 
     @PostMapping("users/signup")
     public String signUpSubmit(Model model, HttpServletResponse response, @RequestBody UserDto userDto) {
-        System.out.println("start");
 
         boolean userInfo = userService.signUp(userDto);
 

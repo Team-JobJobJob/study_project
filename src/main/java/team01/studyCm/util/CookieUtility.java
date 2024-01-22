@@ -45,10 +45,13 @@ public class CookieUtility {
     }
 
     public Map<String, String> getCookie(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
+        if(request == null) {
+            return map;
+        }
         // Get all cookies from the request
         Cookie[] cookies = request.getCookies();
 
-        Map<String, String> map = new HashMap<>();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("user_name".equals(cookie.getName())) {
