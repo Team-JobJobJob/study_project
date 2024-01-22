@@ -16,4 +16,6 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     Page<Chat> findByJob(String job, Pageable pageable);
 
     Chat findByChatId(Long ChatId);
+
+  Optional<Chat> findFirstByChatName(String chatName);
 }
