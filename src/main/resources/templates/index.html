@@ -122,9 +122,9 @@
 
                 if (response.redirected) {
                     //store token to local storage
-                    localStorage.setItem('token', response.url.split("-")[1]);
+                    localStorage.setItem('token', response.url.split("-token:")[1]);
                     // Get the redirected URL from the headers
-                    const redirectedUrl = response.url.split("-")[0];
+                    const redirectedUrl = response.url.split("-token:")[0];
                     console.log('Redirected URL:', redirectedUrl);
                     window.location.href = redirectedUrl;
                 }

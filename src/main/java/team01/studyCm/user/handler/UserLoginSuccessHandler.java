@@ -84,7 +84,7 @@ public class UserLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
 //      response.getWriter().write(tokenJson);
 
       String job = user.getJob();
-      response.sendRedirect("/chat/rooms/" + job + "-" + accessToken);
+      response.sendRedirect("/chat/rooms/" + job + "-token:" + accessToken);
 
     }
     catch (Exception e){
