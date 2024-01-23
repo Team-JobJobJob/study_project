@@ -1,4 +1,4 @@
-package team01.studyCm.chat.service;
+package team01.studyCm.chat;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.util.Optional;
@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.entity.Chat;
 import team01.studyCm.chat.repository.ChatRepository;
+import team01.studyCm.chat.service.ChatService;
 import team01.studyCm.user.entity.User;
 import team01.studyCm.user.repository.UserRepository;
 
@@ -57,7 +58,7 @@ class ChatServiceTest {
   void modifyRoom() {
 
     ChatDto chatDto = new ChatDto();
-    chatDto.setChatId(15L);
+    chatDto.setChatId(16L);
     chatDto.setChatName(newChatName);
     chatDto.setDescription("같이 매일 문제 풀어보고 풀이 방법 설명해요");
     chatDto.setMemberCnt(5);
@@ -75,7 +76,7 @@ class ChatServiceTest {
 
   @Test
   void deleteRoom() {
-    Long chatId = 15L;
+    Long chatId = 16L;
     chatService.deleteRoom(chatId);
 
     Optional<Chat> deleteChat = chatRepository.findById(chatId);

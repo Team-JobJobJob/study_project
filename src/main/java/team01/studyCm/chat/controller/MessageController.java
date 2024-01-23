@@ -81,6 +81,8 @@ public class MessageController {
         headerAccessor.getSessionAttributes().put("userId", userId);
         headerAccessor.getSessionAttributes().put("chatId", message.getChatId());
 
+        log.info("head Accessor info : {}", headerAccessor);
+
         message.setContents(message.getSender() + " 님 입장!!");
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatId(), message); //sub
     }
@@ -102,7 +104,9 @@ public class MessageController {
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
         Long chatId = (Long) headerAccessor.getSessionAttributes().get("chatId");
 
-        log.info("headAccessor {}", headerAccessor);
+        log.info("get userId : {}",userId);
+        log.info("get chatId : {}",chatId);
+        log.info("headAccessor : {}", headerAccessor);
 
         chatService.decrementUserCount(chatId);
 
