@@ -97,7 +97,7 @@ public class TodoListController {
         todoListService.addTodo(todoDto);
 
         for(String email: emails) {
-            if(!currentEmail.equals(email)) {
+            if(currentEmail != null && !currentEmail.equals(email)) {
                 todoDto.setEmail(email);
                 todoListService.addTodo(todoDto);
             }
@@ -106,12 +106,11 @@ public class TodoListController {
         return "redirect:/todoList/" + chatId;
     }
 
-    @DeleteMapping("")
-    public String deleteList(Long toDoId) {
+    @DeleteMapping("/{chatId}")
+    public String deleteList(@PathVariable Long chatId, Long toDoId) {
         todoListService.deleteTodo(toDoId);
-        return "redirect:todo/list";
-    }
 
-    // 변경 예정   /todolist/+chatId
+        return "redirect:/todoList/" + chatId;
+    }
 
 }

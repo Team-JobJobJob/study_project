@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,17 +15,22 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import team01.studyCm.todo.dto.CheckBoxDto;
+import team01.studyCm.todo.entity.TodoList;
 import team01.studyCm.todo.service.TodoListService;
 import team01.studyCm.user.dto.UserDto;
 import team01.studyCm.user.dto.UserInfoDto;
 import team01.studyCm.user.service.UserDetailService;
 import team01.studyCm.user.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,15 +82,17 @@ public class TodoControllerTest {
     }
 
     @Test
-    void deleteTodoTest() throws Exception{
-        Long toDoId = 41L;
+    public void testDeleteList() throws Exception {
+        // Given
+        Long chatId = 42L;
+        Long toDoId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/todoList")
-            .param("toDoId",String.valueOf(toDoId)))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(MockMvcResultMatchers.redirectedUrl("todo/list"))
-            .andReturn();
+        doNothing().when(todoListService).deleteTodo(toDoId);
 
-        //redirect 주소 todo/list 맞는지 확인 부탁
+        // When and Then
+        mockMvc.perform(delete("/todoList/{chatId}", chatId)
+                .param("toDoId", String.valueOf(toDoId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/todoList/" + chatId));
     }
 }
