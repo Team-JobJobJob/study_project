@@ -74,4 +74,17 @@ public class TodoControllerTest {
                 .andExpect(redirectedUrl("/todoList/1"))
                 .andReturn();
     }
+
+    @Test
+    void deleteTodoTest() throws Exception{
+        Long toDoId = 41L;
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/todoList")
+            .param("toDoId",String.valueOf(toDoId)))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(MockMvcResultMatchers.redirectedUrl("todo/list"))
+            .andReturn();
+
+        //redirect 주소 todo/list 맞는지 확인 부탁
+    }
 }
