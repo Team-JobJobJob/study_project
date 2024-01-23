@@ -3,10 +3,7 @@ package team01.studyCm.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -166,13 +163,15 @@ public class TokenProvider{
   }
 
   // 채팅 관련 메소드
+
   public Long getUserIdFromAccessToken (String token) {
     return getUserId(token, secretKey);
   }
 
-  private Long getUserId(String token, String signingKey) {
+
+  private Long getUserId(String token, String secretKey) {
     Claims claims = Jwts.parser()
-            .setSigningKey(signingKey)
+            .setSigningKey(secretKey)
             .parseClaimsJws(token)
             .getBody();
 

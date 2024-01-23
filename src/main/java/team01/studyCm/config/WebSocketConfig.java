@@ -1,6 +1,8 @@
 package team01.studyCm.config;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,6 +15,14 @@ import team01.studyCm.alarm.handler.AlarmHandler;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final AlarmHandler alarmHandler;
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // stomp 접속 주소 url : /ws-stomp
+        registry.addEndpoint("/ws/chat")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+    }
     @Override
     public void configureMessageBroker (MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/sub");
@@ -20,18 +30,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // stomp 접속 주소 url : /ws-stomp
-        registry.addEndpoint("/stomp/chat")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
-    }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration){
-        registration.interceptors(alarmHandler);
-    }
+
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration){
+//        registration.interceptors(alarmHandler);
+//    }
 
 
 }

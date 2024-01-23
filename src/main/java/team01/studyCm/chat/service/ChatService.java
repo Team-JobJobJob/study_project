@@ -9,15 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import team01.studyCm.alarm.service.AlarmService;
-import team01.studyCm.auth.service.CustomOAuth2UserService;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
-import team01.studyCm.chat.dto.MessageDto;
 import team01.studyCm.chat.entity.Chat;
+import team01.studyCm.chat.entity.Message;
 import team01.studyCm.chat.repository.ChatRepository;
+import team01.studyCm.chat.repository.MessageRepository;
 import team01.studyCm.user.entity.User;
-import team01.studyCm.user.repository.UserRepository;
 
 import java.security.Principal;
 import java.util.*;
@@ -30,30 +28,17 @@ import team01.studyCm.user.service.UserService;
 public class ChatService {
 
   private final ChatRepository chatRepository;
+  private final MessageRepository messageRepository;
 
-  private final UserRepository userRepository;
-  private final CustomOAuth2UserService customOAuth2UserService;
   private final UserService userService;
-  private final AlarmService alarmService;
 
-  private Map<Long, Chat> chatRoomMap;
+  private Map<Long, Chat> chatRooms;
 
   @PostConstruct
-  private void initializeChatRoomMap() {
-    this.chatRoomMap = new LinkedHashMap<>();
+  private void init() {
+    chatRooms = new LinkedHashMap<>();
   }
 
-//  public void createRoom(ChatDto chatDto, User loggedInUser) {
-//
-//    loggedInUser = // 로그인한 사용자 정보를 가져오거나 생성
-//            userRepository.save(loggedInUser);
-//
-//    Chat chat = Chat.toEntity(chatDto, loggedInUser);
-//
-
-//    chatRepository.save(chat);
-//
-//  }
 
   public void createRoomWithPrincipal(ChatDto chatDto,Principal principal) {
     User user = userService.getUser(principal);
@@ -75,7 +60,7 @@ public class ChatService {
 
     chatDto.setJob(job);
 
-    this.chatRoomMap.put(chat.getChatId(), chat);
+    this.chatRooms.put(chat.getChatId(), chat);
 
     // ChatRoom 엔티티 저장
     chatRepository.save(chat);
@@ -99,41 +84,13 @@ public class ChatService {
             .user(user)
             .build();
 
-    this.chatRoomMap.put(chat.getChatId(), chat);
+    this.chatRooms.put(chat.getChatId(), chat);
 
     chatDto.setJob(job);
     // ChatRoom 엔티티 저장
     chatRepository.save(chat);
   }
 
-//  public void createRoom(ChatDto chatDto, User user) {
-//
-//    String email = user.getEmail();
-//
-//    // 사용자가 존재하지 않으면 예외를 던짐
-//    user = userRepository.findByEmail(user.getEmail())
-//            .orElseThrow(() -> new NoSuchElementException("User not found for email: " + email));
-//
-//    String job = user.getJob();
-//
-//// getOtherDtoFields를 이용하여 다른 필드들을 가져옴
-//    Map<String, Object> otherDtoFields = chatDto.getOtherDtoFields();
-//
-//    // ChatRoomDto에서 필요한 정보를 이용하여 ChatRoom 엔티티 생성
-//    Chat chat = Chat.builder()
-//            .chatName(chatDto.getChatName())
-//            .description(chatDto.getDescription())
-//            .memberCnt(chatDto.getMemberCnt())
-//            .created_at(chatDto.getCreated_at())
-//            .modified_at(chatDto.getModified_at())
-//            .email((String) otherDtoFields.get("email"))
-//            .job((String) otherDtoFields.get("job"))
-//            .user(user)
-//            .build();
-//
-//    // ChatRoom 엔티티 저장
-//    chatRepository.save(chat);
-//  }
 
   public void modifyRoom(ChatDto chatDto) {
 
@@ -223,29 +180,6 @@ public class ChatService {
         .build();
   }
 
-//  public List<MessageDto> findAllMessageByChatId(Long chatId) {
-//    List<Message> messages =  messageRepository.findAllMessageByChatId(chatId);
-//    List<MessageDto> ret = new ArrayList<>();
-//    for (Message message : messages) {
-//      ret.add(toMessageDto(message));
-//    }
-//    return ret;
-//  }
-
-//  public static MessageDto toMessageDto(Message message){
-//    MessageDto messageDto = new MessageDto();
-//
-//    messageDto.setId(message.getId());
-//
-//    messageDto.setChatId(message.getChat().getChatId());
-//    messageDto.setUserId(message.getUser().getUser_id());
-//
-//    messageDto.setSender(message.getSender());
-//    messageDto.setContents(message.getContents());
-//
-//    return messageDto;
-//
-//  }
 
   // 채팅 관련 메소드
 
@@ -262,12 +196,12 @@ public class ChatService {
   }
 
   public void removeUserFromRoom(Long chatId, Long userId) {
-    Chat chat = getChatById(chatId);
+    Chat chat = chatRepository.findByChatId(chatId);
     chat.getUserList().remove(userId);
   }
 
   private void updateUserCount(Long chatId, int count) {
-    Chat chat = getChatById(chatId);
+    Chat chat = chatRepository.findByChatId(chatId);
     chat.setUserCnt(chat.getUserCnt() + count);
   }
 
@@ -276,7 +210,7 @@ public class ChatService {
   }
 
   public Long addUserToRoom(Long chatId, String userName, Principal principal,String email) {
-    Chat chat = getChatById(chatId);
+    Chat chat = chatRepository.findByChatId(chatId);
 
     if (principal == null) {
       User user = userService.getUserByEmail(email);
@@ -298,11 +232,14 @@ public class ChatService {
 
   }
 
-  public String getUserName(Long chatId, Long userId) {
-    Chat chat = getChatById(chatId);
-    return chat.getUserList().get(userId);
+  public Message createChat(Long chatId, String sender, String contents) {
+    Chat chat = chatRepository.findById(chatId).orElseThrow();  //방 찾기 -> 없는 방일 경우 여기서 예외처리
+    return messageRepository.save(Message.createMessage(chat, sender, contents));
   }
 
-
+//   채팅방 채팅내용 불러오기
+//  public List<Message> findAllMessageByChatId(Long chatId) {
+//    return messageRepository.findAllByChatId(chatId);
+//  }
 
 }

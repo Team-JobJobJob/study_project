@@ -18,9 +18,10 @@ public class MessageCreateRequestDto {
   private String sender;
   private String contents;
 
-  public MessageCreateRequestDto(Long chatId, String sender, String contents) {
-    this.chatId = chatId;
-    this.sender = sender;
-    this.contents = contents;
-  }
+//  public MessageCreateRequestDto(Long chatId, Long userId, String sender, String contents) {
+//    this.chatId = chatId;
+//    this.userId = userId;
+//    this.sender = sender;
+//    this.contents = contents;
+//  }
 }

@@ -3,10 +3,7 @@ package team01.studyCm.chat.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,10 +72,8 @@ public class Chat {
           name = "user_list"
   )
   @MapKeyColumn(name="user_id")
-  @Column(name="user_name")
+  @Column(name="chat_id")
   private Map<Long,String> userList = new HashMap<>();
-
-
 
 
 
@@ -106,6 +101,5 @@ public class Chat {
             .build();
   }
 
-  // 채팅 관련 메소드
 
 }

@@ -3,6 +3,7 @@ package team01.studyCm.chat.dto;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
+import team01.studyCm.chat.entity.Message;
 import team01.studyCm.user.entity.User;
 
 @Getter
@@ -30,6 +31,21 @@ public class MessageDto {
     private String contents; // 메시지
     private String createdAt; // 채팅 발송 시간
 
+
+//    public static MessageDto toMessageDto(Message message){
+//        MessageDto messageDto = new MessageDto();
+//
+//        messageDto.setId(message.getId());
+//
+//        messageDto.setChatId(message.getChat().getChatId());
+//        messageDto.setUserId(message.getUser().getUser_id());
+//
+//        messageDto.setSender(message.getSender());
+//        messageDto.setContents(message.getContents());
+//
+//        return messageDto;
+//
+//    }
 
 
 }

@@ -1,16 +1,11 @@
 package team01.studyCm.chat.controller;
 
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import team01.studyCm.auth.CustomOAuth2User;
 import team01.studyCm.chat.dto.ChatDto;
 import team01.studyCm.chat.dto.ChatPageDto;
+import team01.studyCm.chat.entity.Chat;
+import team01.studyCm.chat.entity.Message;
 import team01.studyCm.chat.service.ChatService;
-import team01.studyCm.user.entity.PrincipalDetails;
 import team01.studyCm.user.entity.User;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -176,6 +171,7 @@ public class ChatController {
 
   @GetMapping("room/enter/{chatId}")
   public String roomDetail (Model model, @PathVariable Long chatId) {
+
     model.addAttribute("chatId", chatId);
     return "chatRooms/chatRoom";
   }
