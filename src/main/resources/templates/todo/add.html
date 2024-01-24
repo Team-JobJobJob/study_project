@@ -61,7 +61,7 @@
 </head>
 <body>
 <!--onsubmit="submitForm(event)"-->
-<form id="addForm" th:action="@{'/todoList/add/' + ${chatId}}" th:method="post">
+<form id="addForm" th:action="@{'/chat/' + ${chatId} + '/todoList/add/'}" th:method="post">
     <h2>To Do List 작성</h2>
     <div>
         <input  class="hidden" type="checkbox" id="finish" name="finish" th:value=false>

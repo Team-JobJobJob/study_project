@@ -20,7 +20,7 @@ import team01.studyCm.util.CookieUtility;
 import java.security.Principal;
 import java.util.*;
 
-@RequestMapping("/todoList")
+@RequestMapping("/chat/{chatId}")
 @RequiredArgsConstructor
 @Controller
 @Slf4j
@@ -28,7 +28,7 @@ public class TodoListController {
 
     private final TodoListService todoListService;
 
-    @GetMapping("/{chatId}")
+    @GetMapping("/todoList")
     public String getList(@PathVariable Long chatId, Model model, HttpServletRequest request, Authentication authentication) {
         log.info("투 두 입장");
         String email;
@@ -54,7 +54,7 @@ public class TodoListController {
         return "todo/list";
     }
 
-    @PostMapping("/check/{chatId}")
+    @PostMapping("/todoList/check")
     public String checkList(HttpServletRequest request, Authentication authentication, @PathVariable Long chatId, @RequestBody CheckBoxDto checkBoxDto) {
         String email;
         if(authentication != null) {
@@ -71,10 +71,10 @@ public class TodoListController {
         log.info(String.valueOf(checkBoxDto.getFinish()));
 
         todoListService.updateCheckTodo(checkBoxDto.getContents(), email, checkBoxDto.getFinish());
-        return "redirect:/todoList/" + chatId;
+        return "redirect:/chat/" + chatId + "/todoList";
     }
 
-    @GetMapping("/add/{chatId}")
+    @GetMapping("/todoList/add")
     public String addListPage(@PathVariable Long chatId, Model model, HttpServletRequest request, Authentication authentication) {
         String email;
         if(authentication != null) {
@@ -90,7 +90,7 @@ public class TodoListController {
         return "todo/add";
     }
 
-    @PostMapping("/add/{chatId}")
+    @PostMapping("/todoList/add")
     public String addList(@PathVariable Long chatId, TodoDto todoDto) {
         List<String> emails = todoListService.getAllUniqueEmailByChatId(chatId);
         String currentEmail = todoDto.getEmail();
@@ -103,14 +103,14 @@ public class TodoListController {
             }
         }
 
-        return "redirect:/todoList/" + chatId;
+        return "redirect:/chat/" + chatId + "/todoList";
     }
 
-    @DeleteMapping("/{chatId}")
+    @DeleteMapping("/todoList")
     public String deleteList(@PathVariable Long chatId, Long toDoId) {
         todoListService.deleteTodo(toDoId);
 
-        return "redirect:/todoList/" + chatId;
+        return "redirect:/chat/" + chatId + "/todoList";
     }
 
 }

@@ -84,7 +84,7 @@ public class ChatController {
   }
 
   // 채팅방 수정
-  @PostMapping("/modifyRoom/{chatId}")
+  @PostMapping("/modifyRoom")
   public String modifyRoom(HttpServletRequest request, @ModelAttribute @RequestBody ChatDto chatDto,
       Authentication authentication) {
 

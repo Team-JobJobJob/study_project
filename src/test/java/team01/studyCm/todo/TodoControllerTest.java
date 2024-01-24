@@ -54,12 +54,12 @@ public class TodoControllerTest {
                 .willReturn(true);
 
         // When/Then
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/todoList/check/1")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/chat/1/todoList/check")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{ \"request\": \"null\", \"authentication\": \"null\", \"chatId\": \"chatId\"," +
                         " \"contents\": \"hi\" , \"finish\": \"true\"}"))
                 .andExpect(status().is3xxRedirection()) // Expect a redirect status code
-                .andExpect(redirectedUrl("/todoList/1"))
+                .andExpect(redirectedUrl("/chat/1/todoList"))
                 .andReturn();
     }
 
@@ -72,12 +72,12 @@ public class TodoControllerTest {
                 .willReturn(list);
 
         // When/Then
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/todoList/add/1")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/chat/1/todoList/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{ \"chatId\": \"chatId\"," +
                         " \"email\": \"test1@gmail.com\"}"))
                 .andExpect(status().is3xxRedirection()) // Expect a redirect status code
-                .andExpect(redirectedUrl("/todoList/1"))
+                .andExpect(redirectedUrl("/chat/1/todoList"))
                 .andReturn();
     }
 
@@ -90,9 +90,9 @@ public class TodoControllerTest {
         doNothing().when(todoListService).deleteTodo(toDoId);
 
         // When and Then
-        mockMvc.perform(delete("/todoList/{chatId}", chatId)
+        mockMvc.perform(delete("/chat/{chatId}/todoList", chatId)
                 .param("toDoId", String.valueOf(toDoId)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/todoList/" + chatId));
+                .andExpect(redirectedUrl("/chat/" + chatId + "/todoList"));
     }
 }
