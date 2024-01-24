@@ -57,17 +57,5 @@ public class MessageController {
                 .build();
     }
 
-//    @MessageMapping(value = "/chat/enter/{chatId}")
-//    public void enter(MessageDto messageDto){
-//        messageDto.setContents(messageDto.getSender() + "님이 채팅방에 참여하였습니다.");
-//        template.convertAndSend("/sub/chat/room/" + messageDto.getChatId(), messageDto);
-//    }
-
-//    @MessageMapping(value = "/chat/message/{chatId}")
-//    public void message(@DestinationVariable Long chatId, MessageDto messageDto){
-//
-//        template.convertAndSend("/sub/chat/room/" + messageDto.getChatId(), messageDto);
-//    }
-
 
 }

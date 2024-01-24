@@ -40,14 +40,14 @@ public class TodoListController {
             Map<String, String> map = CookieUtility.getCookie(request);
             email = map.get("userEmail");
         }
-        List<String> comments = todoListService.getUniqueContentsByChatId(chatId);
+    List<String> comments = todoListService.getUniqueContentsByChatId(chatId);
 
-        Boolean hasTodo = todoListService.hasTodo(chatId, email);
+    Boolean hasTodo = todoListService.hasTodo(chatId, email);
         if(!hasTodo) {
-            for(String comment: comments) {
-                todoListService.addTodoWithElements(email, chatId, comment);
-            }
+        for(String comment: comments) {
+            todoListService.addTodoWithElements(email, chatId, comment);
         }
+    }
 
         model.addAttribute("todoList", todoListService.findWithEmailAndChatId(chatId, email));
         model.addAttribute("chatId", chatId);
@@ -97,7 +97,7 @@ public class TodoListController {
         todoListService.addTodo(todoDto);
 
         for(String email: emails) {
-            if(!currentEmail.equals(email)) {
+            if(currentEmail != null && !currentEmail.equals(email)) {
                 todoDto.setEmail(email);
                 todoListService.addTodo(todoDto);
             }
@@ -106,10 +106,11 @@ public class TodoListController {
         return "redirect:/todoList/" + chatId;
     }
 
-    @DeleteMapping("")
-    public String deleteList(Long toDoId) {
+    @DeleteMapping("/{chatId}")
+    public String deleteList(@PathVariable Long chatId, Long toDoId) {
         todoListService.deleteTodo(toDoId);
-        return "redirect:todo/list";
+
+        return "redirect:/todoList/" + chatId;
     }
 
 }
