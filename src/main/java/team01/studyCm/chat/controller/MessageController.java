@@ -41,11 +41,10 @@ public class MessageController {
 
     private final SimpMessagingTemplate template;
     private final ChatService chatService;
-//    private final MessageRepository messageRepository;
     private final ChatRepository chatRepository;
 
-    @MessageMapping("/chat/message/{chatId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
-    @SendTo("/sub/chat/room/{chatId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
+    @MessageMapping("/chat/{chatId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
+    @SendTo("/sub/chat/{chatId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
     public MessageDto message(@DestinationVariable Long chatId, MessageDto messageDto) {
 
         //채팅 저장

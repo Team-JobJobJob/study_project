@@ -186,7 +186,7 @@
             loadChat(chatList)  //저장된 채팅 불러오기
 
             //구독
-            stompClient.subscribe('/sub/chat/room/'+chatId, function (messageDto) {
+            stompClient.subscribe('/sub/chat/'+chatId, function (messageDto) {
                 showChat(JSON.parse(messageDto.body));
             });
         });
@@ -202,7 +202,7 @@
 
     //html 에서 입력값, roomId 를 받아서 Controller 로 전달
     function sendChat() {
-        stompClient.send("/pub/chat/message/"+chatId, {},
+        stompClient.send("/pub/chat/"+chatId, {},
             JSON.stringify({
                 'sender': $("#sender").val(),
                 'contents' : $("#contents").val()
