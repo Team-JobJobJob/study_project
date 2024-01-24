@@ -40,3 +40,6 @@
 
 ## 🖊️ERD
 
+![image](https://github.com/Team-JobJobJob/study_project/assets/129375053/b3d10b61-20a4-4c40-978e-b77c3dbad706)
+
+
