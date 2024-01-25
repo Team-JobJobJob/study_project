@@ -111,7 +111,7 @@ class ChatControllerTest {
             })
         )
         .andExpect(status().is3xxRedirection())
-        .andExpect(MockMvcResultMatchers.redirectedUrl("/chat/rooms/IT" ))
+        .andExpect(MockMvcResultMatchers.redirectedUrl("/chat/rooms/WEBDEV" ))
         .andReturn();
   }
 

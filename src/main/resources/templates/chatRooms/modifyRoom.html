@@ -53,7 +53,7 @@
 </head>
 <body>
 
-<form th:action="@{'/chat/modifyRoom/'}" th:method="post">
+<form th:action="@{'/chat/modifyRoom/' + ${chatId}}" th:method="post">
     <h2>채팅방 수정</h2>
     <label for="chatName">채팅방 이름:</label>
     <input type="text" id="chatName" name="chatName" th:value="${chatName}" required>

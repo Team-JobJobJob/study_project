@@ -125,8 +125,8 @@
                 </div>
                 <div>
                     <button type="button" value="BACK" onClick="history.go(-1)">돌아가기</button>
-                    <button type="button"><a th:href="@{'/todoList/' + ${chatId}}">Todo 리스트</a></button>
-                    <button type="button"><a th:href="@{'/todoList/add/' + ${chatId}}">Todo 리스트 생성</a></button>
+                    <button type="button"><a th:href="@{'/chat/' + ${chatId} + '/todoList'}">Todo 리스트</a></button>
+                    <button type="button"><a th:href="@{'/chat/' + ${chatId} + '/todoList/add'}">Todo 리스트 생성</a></button>
                 </div>
             </form>
         </div>
