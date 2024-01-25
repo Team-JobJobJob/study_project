@@ -237,9 +237,4 @@ public class ChatService {
     return messageRepository.save(Message.createMessage(chat, sender, contents));
   }
 
-//   채팅방 채팅내용 불러오기
-//  public List<Message> findAllMessageByChatId(Long chatId) {
-//    return messageRepository.findAllByChatId(chatId);
-//  }
-
 }

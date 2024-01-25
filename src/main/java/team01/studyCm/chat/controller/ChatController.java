@@ -170,10 +170,11 @@ public class ChatController {
   }
 
   @GetMapping("room/enter/{chatId}")
-  public String roomDetail (Model model, @PathVariable Long chatId) {
+  public String roomDetail (Model model, @PathVariable Long chatId,Authentication authentication) {
 
     model.addAttribute("chatId", chatId);
     return "chatRooms/chatRoom";
+
   }
 
 }
